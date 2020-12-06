@@ -13,6 +13,7 @@
 		9F18C3AF257C40D60073FA85 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F18C3AE257C40D60073FA85 /* Assets.xcassets */; };
 		9F18C3B2257C40D60073FA85 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F18C3B1257C40D60073FA85 /* Preview Assets.xcassets */; };
 		9F18C3B5257C40D60073FA85 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F18C3B3257C40D60073FA85 /* LaunchScreen.storyboard */; };
+		9F18C3BE257C411C0073FA85 /* SetGameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F18C3BD257C411C0073FA85 /* SetGameModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		9F18C3B1257C40D60073FA85 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9F18C3B4257C40D60073FA85 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9F18C3B6257C40D60073FA85 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9F18C3BD257C411C0073FA85 /* SetGameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGameModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				9F18C3A8257C40D60073FA85 /* AppDelegate.swift */,
 				9F18C3AA257C40D60073FA85 /* SceneDelegate.swift */,
 				9F18C3AC257C40D60073FA85 /* ContentView.swift */,
+				9F18C3BD257C411C0073FA85 /* SetGameModel.swift */,
 				9F18C3AE257C40D60073FA85 /* Assets.xcassets */,
 				9F18C3B3257C40D60073FA85 /* LaunchScreen.storyboard */,
 				9F18C3B6257C40D60073FA85 /* Info.plist */,
@@ -145,6 +148,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9F18C3BE257C411C0073FA85 /* SetGameModel.swift in Sources */,
 				9F18C3A9257C40D60073FA85 /* AppDelegate.swift in Sources */,
 				9F18C3AB257C40D60073FA85 /* SceneDelegate.swift in Sources */,
 				9F18C3AD257C40D60073FA85 /* ContentView.swift in Sources */,
