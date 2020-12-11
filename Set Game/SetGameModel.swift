@@ -60,10 +60,10 @@ struct SetGameModel {
         case purple
     }
     
-    enum NumberFeature: CaseIterable {
-        case one
-        case two
-        case three
+    enum NumberFeature: Int, CaseIterable {
+        case one = 1
+        case two = 2
+        case three = 3
     }
     
     enum ShapeFeature: CaseIterable {
