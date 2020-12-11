@@ -17,23 +17,13 @@ struct CardView: View {
         ZStack {
             GeometryReader { geometry in
                 RoundedRectangle(cornerRadius: geometry.size.height * cornerRadiusFactor)
-                    .stroke(Color.gray.opacity(0.75), lineWidth: 1)
+                    .stroke(Color.gray.opacity(0.5), lineWidth: 1)
                     .shadow(color: Color.gray.opacity(0.5), radius: 3, x: 0, y: 0)
                 RoundedRectangle(cornerRadius: geometry.size.height * cornerRadiusFactor)
                     .foregroundColor(.white)
-                HStack(spacing: 0) {
-                    Spacer()
-                    
-                    HStack(spacing: geometry.size.width/14) {
-                        ForEach(0..<card.number.rawValue) { item in
-                            getSingleSymbol(shapeFeature: card.shape, shadingFeature: card.shading, colorFeature: card.color)
-                                .frame(width: geometry.size.width * shapeWidthFactor)
-                        }
-                    }
-                    .layoutPriority(1)
-                    
-                    Spacer()
-                }
+                                
+                SetGameSymbol(card: card)
+
             }
         }
         .aspectRatio(1.5, contentMode: .fit)
@@ -65,8 +55,8 @@ struct CardView_Previews: PreviewProvider {
             }
             HStack(spacing: 16) {
                 CardView(card: SetGameModel.Card(color: .purple, number: .three, shape: .diamond, shading: .open))
-                CardView(card: SetGameModel.Card(color: .purple, number: .three, shape: .diamond, shading: .open))
-                CardView(card: SetGameModel.Card(color: .green, number: .three, shape: .oval, shading: .striped))
+                CardView(card: SetGameModel.Card(color: .purple, number: .one, shape: .diamond, shading: .open))
+                CardView(card: SetGameModel.Card(color: .green, number: .two, shape: .oval, shading: .striped))
                 CardView(card: SetGameModel.Card(color: .red, number: .two, shape: .diamond, shading: .striped))
             }
             HStack(spacing: 16) {
@@ -103,11 +93,8 @@ struct AnyShape: Shape {
     }
 }
 
-struct Symbol: View {
-    let shapeFeature: SetGameModel.ShapeFeature
-    let shadingFeature: SetGameModel.ShadingFeature
-    let colorFeature: SetGameModel.ColorFeature
-    let numberFeature: SetGameModel.NumberFeature
+struct SetGameSymbol: View {
+    let card: SetGameModel.Card
     
     var body: some View {
         GeometryReader { geometry in
@@ -115,8 +102,10 @@ struct Symbol: View {
                 Spacer()
                 
                 HStack(spacing: geometry.size.width/14) {
-                    ForEach(0..<numberFeature.rawValue) { item in
-                        getSingleSymbol(shapeFeature: shapeFeature, shadingFeature: shadingFeature, colorFeature: colorFeature)
+                    ForEach(0..<card.number.rawValue) { item in
+                        getSingleSymbol(shapeFeature: card.shape,
+                                        shadingFeature: card.shading,
+                                        colorFeature: card.color)
                             .frame(width: geometry.size.width * shapeWidthFactor)
                     }
                 }
