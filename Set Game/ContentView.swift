@@ -14,9 +14,7 @@ struct ContentView: View {
         VStack {
             
             Button("New game") {
-                withAnimation(.easeInOut(duration: 0.5)) {
-                    viewModel.newGame()
-                }
+                newGame()
             }
             .padding()
             
@@ -34,6 +32,7 @@ struct ContentView: View {
                     .padding(4)
             }
             .padding()
+            .onAppear{ newGame() }
             
             Spacer()
             
@@ -48,6 +47,12 @@ struct ContentView: View {
 
         }
         
+    }
+    
+    func newGame() {
+        withAnimation(.easeInOut(duration: 0.5)) {
+            viewModel.newGame()
+        }
     }
     
 }
