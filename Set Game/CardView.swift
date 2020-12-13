@@ -13,20 +13,33 @@ private let cornerRadiusFactor: CGFloat = 1/12
 struct CardView: View {
     let card: SetGameModel.Card
     
+    func bgFromMatching(_ isMatched: SetGameModel.Card.MatchingStatus) -> Color  {
+        switch isMatched {
+        case .inapplicable:
+            return Color.white
+        case .matched:
+            return Color.green.opacity(0.1)
+        case .notMatched:
+            return Color.red.opacity(0.1)
+        }
+        
+    }
+    
     var body: some View {
         ZStack {
             GeometryReader { geometry in
                 RoundedRectangle(cornerRadius: geometry.size.height * cornerRadiusFactor)
-                    .stroke(Color.gray.opacity(0.5), lineWidth: 1)
-                    .shadow(color: Color.gray.opacity(0.5), radius: 3, x: 0, y: 0)
+                    .foregroundColor(bgFromMatching(card.isMatched))
                 RoundedRectangle(cornerRadius: geometry.size.height * cornerRadiusFactor)
-                    .foregroundColor(.white)
+                    .stroke(Color.black.opacity(card.isSelected ? 1 : 0.25), lineWidth: card.isSelected ? 1.5 : 1)
+//                    .shadow(color: Color.gray.opacity(0.5), radius: 3, x: 0, y: 0)
                                 
                 SetGameSymbol(card: card)
 
             }
         }
         .aspectRatio(1.5, contentMode: .fit)
+
     }
     
 }
@@ -93,7 +106,7 @@ struct AnyShape: Shape {
     }
 }
 
-struct SetGameSymbol: View {
+private struct SetGameSymbol: View {
     let card: SetGameModel.Card
     
     var body: some View {
@@ -114,13 +127,14 @@ struct SetGameSymbol: View {
                 Spacer()
             }
         }
+
     }
 }
 
 
-func getSingleSymbol(shapeFeature: SetGameModel.ShapeFeature,
-               shadingFeature: SetGameModel.ShadingFeature,
-               colorFeature: SetGameModel.ColorFeature) -> some View
+private func getSingleSymbol(shapeFeature: SetGameModel.Card.ShapeFeature,
+                     shadingFeature: SetGameModel.Card.ShadingFeature,
+                     colorFeature: SetGameModel.Card.ColorFeature) -> some View
 {
     var symbol: AnyShape
     switch shapeFeature {
@@ -139,25 +153,25 @@ func getSingleSymbol(shapeFeature: SetGameModel.ShapeFeature,
         return ZStack{
             symbol.foregroundColor(.white).opacity(1)
             Striped().foregroundColor(.clear).clipShape(symbol)
-            symbol.stroke(color, lineWidth: 3)
+            symbol.stroke(color, lineWidth: 2)
         }
     case .solid:
         return ZStack{
             symbol.foregroundColor(color).opacity(1)
             Striped().foregroundColor(.clear).clipShape(symbol)
-            symbol.stroke(color, lineWidth: 3)
+            symbol.stroke(color, lineWidth: 2)
         }
     case .striped:
         return ZStack{
             symbol.foregroundColor(color).opacity(0)
             Striped().foregroundColor(color).clipShape(symbol)
-            symbol.stroke(color, lineWidth: 3)
+            symbol.stroke(color, lineWidth: 2)
         }
     }
     
 }
 
-private func colorForFeatureValue(_ colorFeature: SetGameModel.ColorFeature) -> Color {
+private func colorForFeatureValue(_ colorFeature: SetGameModel.Card.ColorFeature) -> Color {
     switch colorFeature {
     case .red:
         return Color(#colorLiteral(red: 0.9449447989, green: 0.5995458961, blue: 0.4950096011, alpha: 1))
