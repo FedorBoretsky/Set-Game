@@ -9,7 +9,7 @@ import Foundation
 
 struct SetGameModel {
     
-    private var deck: [Card] = Self.fullDeck().shuffled()
+    private var deck: [Card] = []
     var openedCards: [Card] = []
     var flewAwayCards: [Card] = []
     var selectedIndices: [Int] {
@@ -23,6 +23,7 @@ struct SetGameModel {
     
     static func fullDeck() -> [Card] {
         var deck = [Card]()
+        let deckId = UUID().uuidString
         for color in Card.ColorFeature.allCases {
             for number in Card.NumberFeature.allCases {
                 for shape in Card.ShapeFeature.allCases {
@@ -31,7 +32,8 @@ struct SetGameModel {
                             Card(color: color,
                                  number: number,
                                  shape: shape,
-                                 shading: shading)
+                                 shading: shading,
+                                 deckId: deckId)
                         )
                     }
                 }
@@ -40,7 +42,6 @@ struct SetGameModel {
         return deck
     }
     
-
     static func isSet (_ Card1: Card, _ Card2: Card, _ Card3: Card) -> Bool {
         
         func isFeatureMakeUpSet<Feature> (_ First: Feature, _ Second: Feature, _ Third: Feature) -> Bool
@@ -90,6 +91,15 @@ struct SetGameModel {
         }
     }
     
+    mutating func startGame() {
+        deck = Self.fullDeck().shuffled()
+        deal(numberOfCards: 12)
+    }
+    
+    mutating func cleanTable() {
+        openedCards = []
+    }
+    
     mutating func choose(card: Card) {
         guard let choosenIndex = openedCards.firstIndex(matching: card) else {
             return
@@ -133,12 +143,15 @@ struct SetGameModel {
         let number: NumberFeature
         let shape: ShapeFeature
         let shading: ShadingFeature
+        let deckId: String
         var id: String {
             get {
-                [String (number.rawValue),
-                 String(color.rawValue),
-                 String(shading.rawValue),
-                 String(shape.rawValue)
+                [
+                    String (number.rawValue),
+                    String(color.rawValue),
+                    String(shading.rawValue),
+                    String(shape.rawValue),
+                    deckId
                 ].joined(separator: "_")
             }
         }
@@ -181,22 +194,22 @@ struct SetGameModel {
 
 #if DEBUG
 let testData = [
-    SetGameModel.Card(color: .green, number: .one, shape: .diamond, shading: .striped),
+    SetGameModel.Card(color: .green, number: .one, shape: .diamond, shading: .striped, deckId: "TestDeck"),
 
-    SetGameModel.Card(color: .red, number: .one, shape: .diamond, shading: .striped),
-    SetGameModel.Card(color: .red, number: .two, shape: .diamond, shading: .solid),
-    SetGameModel.Card(color: .red, number: .three, shape: .diamond, shading: .open),
+    SetGameModel.Card(color: .red, number: .one, shape: .diamond, shading: .striped, deckId: "TestDeck"),
+    SetGameModel.Card(color: .red, number: .two, shape: .diamond, shading: .solid, deckId: "TestDeck"),
+    SetGameModel.Card(color: .red, number: .three, shape: .diamond, shading: .open, deckId: "TestDeck"),
     
-    SetGameModel.Card(color: .red, number: .two, shape: .oval, shading: .open),
-    SetGameModel.Card(color: .red, number: .two, shape: .oval, shading: .striped),
-    SetGameModel.Card(color: .red, number: .two, shape: .oval, shading: .solid),
+    SetGameModel.Card(color: .red, number: .two, shape: .oval, shading: .open, deckId: "TestDeck"),
+    SetGameModel.Card(color: .red, number: .two, shape: .oval, shading: .striped, deckId: "TestDeck"),
+    SetGameModel.Card(color: .red, number: .two, shape: .oval, shading: .solid, deckId: "TestDeck"),
     
-    SetGameModel.Card(color: .green, number: .one, shape: .squiggle, shading: .striped),
-    SetGameModel.Card(color: .purple, number: .two, shape: .oval, shading: .striped),
-    SetGameModel.Card(color: .red, number: .three, shape: .diamond, shading: .striped),
+    SetGameModel.Card(color: .green, number: .one, shape: .squiggle, shading: .striped, deckId: "TestDeck"),
+    SetGameModel.Card(color: .purple, number: .two, shape: .oval, shading: .striped, deckId: "TestDeck"),
+    SetGameModel.Card(color: .red, number: .three, shape: .diamond, shading: .striped, deckId: "TestDeck"),
     
-    SetGameModel.Card(color: .purple, number: .one, shape: .oval, shading: .striped),
-    SetGameModel.Card(color: .green, number: .two, shape: .diamond, shading: .solid),
-    SetGameModel.Card(color: .red, number: .three, shape: .squiggle, shading: .open),
+    SetGameModel.Card(color: .purple, number: .one, shape: .oval, shading: .striped, deckId: "TestDeck"),
+    SetGameModel.Card(color: .green, number: .two, shape: .diamond, shading: .solid, deckId: "TestDeck"),
+    SetGameModel.Card(color: .red, number: .three, shape: .squiggle, shading: .open, deckId: "TestDeck"),
 ]
 #endif

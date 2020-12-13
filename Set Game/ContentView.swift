@@ -25,9 +25,12 @@ struct ContentView: View {
                             viewModel.choose(card: card)
                         }
                     }
-                    .transition(AnyTransition.asymmetric(
-                                    insertion: .move(edge: .bottom),
-                                    removal: .scale))
+                    .transition(
+                        AnyTransition.asymmetric(
+                                    insertion: .offset(randomOffScreenOffset()),
+                                    removal: .offset(randomOffScreenOffset())
+                        )
+                    )
 
                     .padding(4)
             }
@@ -53,6 +56,13 @@ struct ContentView: View {
         withAnimation(.easeInOut(duration: 0.5)) {
             viewModel.newGame()
         }
+    }
+    
+    func randomOffScreenOffset() -> CGSize {
+        let angle = Double.random(in: 0 ..< Double.pi * 2)
+        let w = CGFloat(cos(angle)) * UIScreen.main.bounds.width * 2
+        let h = CGFloat(sin(angle)) * UIScreen.main.bounds.height * 2
+        return CGSize(width: w, height: h)
     }
     
 }

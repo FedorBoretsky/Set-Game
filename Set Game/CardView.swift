@@ -45,49 +45,49 @@ struct CardView: View {
 }
 
 
-struct CardView_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack(spacing: 16) {
-            HStack(spacing: 16) {
-//                CardView(card: SetGameModel.Card(color: .green, number: .three, shape: .oval, shading: .open))
+//struct CardView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        VStack(spacing: 16) {
+//            HStack(spacing: 16) {
+////                CardView(card: SetGameModel.Card(color: .green, number: .three, shape: .oval, shading: .open))
+////                CardView(card: SetGameModel.Card(color: .green, number: .one, shape: .diamond, shading: .solid))
 //                CardView(card: SetGameModel.Card(color: .green, number: .one, shape: .diamond, shading: .solid))
-                CardView(card: SetGameModel.Card(color: .green, number: .one, shape: .diamond, shading: .solid))
-                CardView(card: SetGameModel.Card(color: .red, number: .three, shape: .diamond, shading: .striped))
-            }
-            HStack(spacing: 16) {
-//                CardView(card: SetGameModel.Card(color: .green, number: .three, shape: .squiggle, shading: .solid))
-                CardView(card: SetGameModel.Card(color: .purple, number: .two, shape: .diamond, shading: .solid))
-                CardView(card: SetGameModel.Card(color: .purple, number: .two, shape: .diamond, shading: .solid))
-                CardView(card: SetGameModel.Card(color: .red, number: .two, shape: .squiggle, shading: .solid))
-            }
-            HStack(spacing: 16) {
-                CardView(card: SetGameModel.Card(color: .purple, number: .three, shape: .diamond, shading: .open))
-                CardView(card: SetGameModel.Card(color: .green, number: .three, shape: .oval, shading: .striped))
-                CardView(card: SetGameModel.Card(color: .green, number: .three, shape: .oval, shading: .striped))
-                CardView(card: SetGameModel.Card(color: .red, number: .two, shape: .diamond, shading: .striped))
-            }
-            HStack(spacing: 16) {
-                CardView(card: SetGameModel.Card(color: .purple, number: .three, shape: .diamond, shading: .open))
-                CardView(card: SetGameModel.Card(color: .purple, number: .one, shape: .diamond, shading: .open))
-                CardView(card: SetGameModel.Card(color: .green, number: .two, shape: .oval, shading: .striped))
-                CardView(card: SetGameModel.Card(color: .red, number: .two, shape: .diamond, shading: .striped))
-            }
-            HStack(spacing: 16) {
-                CardView(card: SetGameModel.Card(color: .purple, number: .three, shape: .diamond, shading: .open))
-                CardView(card: SetGameModel.Card(color: .green, number: .three, shape: .oval, shading: .striped))
-                CardView(card: SetGameModel.Card(color: .purple, number: .three, shape: .diamond, shading: .open))
-                CardView(card: SetGameModel.Card(color: .purple, number: .three, shape: .diamond, shading: .open))
-            }
-            HStack(spacing: 16) {
-                CardView(card: SetGameModel.Card(color: .green, number: .two, shape: .oval, shading: .solid))
-                CardView(card: SetGameModel.Card(color: .purple, number: .three, shape: .diamond, shading: .open))
-                CardView(card: SetGameModel.Card(color: .purple, number: .three, shape: .diamond, shading: .open))
-                CardView(card: SetGameModel.Card(color: .purple, number: .two, shape: .diamond, shading: .solid))
-            }
-        }
-        .padding()
-    }
-}
+//                CardView(card: SetGameModel.Card(color: .red, number: .three, shape: .diamond, shading: .striped))
+//            }
+//            HStack(spacing: 16) {
+////                CardView(card: SetGameModel.Card(color: .green, number: .three, shape: .squiggle, shading: .solid))
+//                CardView(card: SetGameModel.Card(color: .purple, number: .two, shape: .diamond, shading: .solid))
+//                CardView(card: SetGameModel.Card(color: .purple, number: .two, shape: .diamond, shading: .solid))
+//                CardView(card: SetGameModel.Card(color: .red, number: .two, shape: .squiggle, shading: .solid))
+//            }
+//            HStack(spacing: 16) {
+//                CardView(card: SetGameModel.Card(color: .purple, number: .three, shape: .diamond, shading: .open))
+//                CardView(card: SetGameModel.Card(color: .green, number: .three, shape: .oval, shading: .striped))
+//                CardView(card: SetGameModel.Card(color: .green, number: .three, shape: .oval, shading: .striped))
+//                CardView(card: SetGameModel.Card(color: .red, number: .two, shape: .diamond, shading: .striped))
+//            }
+//            HStack(spacing: 16) {
+//                CardView(card: SetGameModel.Card(color: .purple, number: .three, shape: .diamond, shading: .open))
+//                CardView(card: SetGameModel.Card(color: .purple, number: .one, shape: .diamond, shading: .open))
+//                CardView(card: SetGameModel.Card(color: .green, number: .two, shape: .oval, shading: .striped))
+//                CardView(card: SetGameModel.Card(color: .red, number: .two, shape: .diamond, shading: .striped))
+//            }
+//            HStack(spacing: 16) {
+//                CardView(card: SetGameModel.Card(color: .purple, number: .three, shape: .diamond, shading: .open))
+//                CardView(card: SetGameModel.Card(color: .green, number: .three, shape: .oval, shading: .striped))
+//                CardView(card: SetGameModel.Card(color: .purple, number: .three, shape: .diamond, shading: .open))
+//                CardView(card: SetGameModel.Card(color: .purple, number: .three, shape: .diamond, shading: .open))
+//            }
+//            HStack(spacing: 16) {
+//                CardView(card: SetGameModel.Card(color: .green, number: .two, shape: .oval, shading: .solid))
+//                CardView(card: SetGameModel.Card(color: .purple, number: .three, shape: .diamond, shading: .open))
+//                CardView(card: SetGameModel.Card(color: .purple, number: .three, shape: .diamond, shading: .open))
+//                CardView(card: SetGameModel.Card(color: .purple, number: .two, shape: .diamond, shading: .solid))
+//            }
+//        }
+//        .padding()
+//    }
+//}
 
 
 struct AnyShape: Shape {

@@ -25,8 +25,9 @@ class SetGameViewModel: ObservableObject {
     // MARK: - Intents
     
     func newGame() {
-        model = SetGameModel()
-        model.deal(numberOfCards: 12)
+//        model = SetGameModel()
+        model.cleanTable()
+        model.startGame()
     }
     
     func deal3MoreCards() {
