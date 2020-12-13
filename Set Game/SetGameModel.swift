@@ -85,6 +85,14 @@ struct SetGameModel {
         }
     }
     
+    mutating func deal(on indices: [Int]) {
+        for index in indices.sorted(by: {$0 < $1}) {
+            if let card = deck.popLast() {
+                openedCards.insert(card, at: index)
+            }
+        }
+    }
+    
     private mutating func flyAway(_ indices: [Int]) {
         for index in indices.sorted(by: {$0 > $1}) {
             openedCards.remove(at: index)
@@ -115,6 +123,7 @@ struct SetGameModel {
             }
             if isSet(previousSelection) {
                 flyAway(previousSelection)
+                deal(on: previousSelection)
             } else {
                 for index in previousSelection {
                     openedCards[index].isSelected = false
