@@ -18,17 +18,17 @@ struct ContentView: View {
             }
             .padding()
             
-            Grid(viewModel.openedCards, desiredAspectRatio: 1.5){ card in
+            GridWithGap(viewModel.openedCards, aspectRatio: 1.5, gap: 4){ card in
                 CardView(card: card)
                     .onTapGesture {
-                        withAnimation{
+                        withAnimation(.easeInOut(duration: 0.25)){
                             viewModel.choose(card: card)
                         }
                     }
                     .transition(
                         AnyTransition.asymmetric(
-                                    insertion: .offset(randomOffScreenOffset()),
-                                    removal: .offset(randomOffScreenOffset())
+                            insertion: AnyTransition.offset(randomOffScreenOffset()),
+                            removal: AnyTransition.offset(randomOffScreenOffset())
                         )
                     )
 

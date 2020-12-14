@@ -26,8 +26,9 @@ class SetGameViewModel: ObservableObject {
     
     func newGame() {
 //        model = SetGameModel()
-        model.cleanTable()
-        model.startGame()
+//        model.cleanTable()
+//        model.startGame()
+        model.newGame()
     }
     
     func deal3MoreCards() {
