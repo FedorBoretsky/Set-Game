@@ -121,25 +121,35 @@ struct SetGameModel {
             return
         }
         
+        //
+        //
+        //
+        
         let previousSelection = selectedIndices
         
         if previousSelection.count < 3 {
             openedCards[choosenIndex].isSelected.toggle()
         } else {
-            if !previousSelection.contains(choosenIndex) {
-                openedCards[choosenIndex].isSelected = true
-            }
+            // 3 cards was selected
             if isSet(previousSelection) {
+                if !previousSelection.contains(choosenIndex) {
+                    openedCards[choosenIndex].isSelected = true
+                }
                 flyAway(previousSelection)
                 deal(on: previousSelection)
             } else {
                 for index in previousSelection {
                     openedCards[index].isSelected = false
                     openedCards[index].isMatched = .inapplicable
+                    openedCards[choosenIndex].isSelected = true
                 }
             }
             
         }
+        
+        //
+        //
+        //
         
         let newSelection = selectedIndices
         
