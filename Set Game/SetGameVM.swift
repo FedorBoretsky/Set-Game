@@ -32,7 +32,7 @@ class SetGameViewModel: ObservableObject {
     }
     
     func deal3MoreCards() {
-        model.deal(numberOfCards: 3)
+        model.deal3MoreCards()
     }
     
     func choose(card: SetGameModel.Card) {

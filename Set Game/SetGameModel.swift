@@ -83,13 +83,26 @@ struct SetGameModel {
         }
     }
     
-    mutating func deal(on indices: [Int]) {
+    mutating func dealWithReplacing(indices: [Int]) {
         for index in indices.sorted(by: {$0 < $1}) {
             if let card = deck.popLast() {
                 openedCards.insert(card, at: index)
             }
         }
     }
+    
+    
+    
+    mutating func deal3MoreCards() {
+        let previousSelection = selectedIndices
+        if isSet(previousSelection) {
+            flyAway(previousSelection)
+            dealWithReplacing(indices: previousSelection)
+        } else {
+            deal(numberOfCards: 3)
+        }
+    }
+    
     
     private mutating func flyAway(_ indices: [Int]) {
         for index in indices.sorted(by: {$0 > $1}) {
@@ -136,7 +149,9 @@ struct SetGameModel {
                     openedCards[choosenIndex].isSelected = true
                 }
                 flyAway(previousSelection)
-                deal(on: previousSelection)
+                if openedCards.count < 12 {
+                    dealWithReplacing(indices: previousSelection)
+                }
             } else {
                 for index in previousSelection {
                     openedCards[index].isSelected = false
