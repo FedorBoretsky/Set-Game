@@ -24,10 +24,9 @@ struct GridWithGap<Item, ItemView>: View where Item: Identifiable, ItemView: Vie
 
     var body: some View {
         GeometryReader { geometry in
-            body(for: ExactAspectTopToBottom(itemCount: self.items¨.count, desiredItemAspectRatio: aspectRatio, areaSize: geometry.size, gap: gap))
+                body(for: ExactAspectTopToBottom(itemCount: self.items¨.count, desiredItemAspectRatio: aspectRatio, areaSize: geometry.size, gap: gap))
         }
     }
-    
     
     private func body(for layout: GridLayoutWithGap) -> some View {
         ForEach(items¨) { item in
@@ -42,17 +41,6 @@ struct GridWithGap<Item, ItemView>: View where Item: Identifiable, ItemView: Vie
             .position(layout.location(ofItemAt: index))
     }
 
-//    func body(for layout: GridLayoutWithGap) -> some View {
-//        return ForEach(0..<self.numberOfItems, id: \.self) { index in
-//            bodyOfItem(for: index, in: layout)
-//        }
-//    }
-//
-//    func bodyOfItem(for index: Int, in layout: GridLayoutWithGap) -> some View {
-//        return viewForItem()
-//            .frame(width: layout.itemSize.width, height: layout.itemSize.height)
-//            .position(layout.location(ofItemAt: index))
-//    }
     
 }
 

@@ -37,24 +37,14 @@ struct ExactAspectTopToBottom: GridLayoutWithGap {
         // - height of item is not bigger than area height
         var bestLayout: (rowCount: Int, columnCount: Int) = (1, itemCount)
         var largestItemArea: CGFloat?
-//        let sizeAspectRatio = abs(Double(areaSize.width/areaSize.height))
-        for rows in 1...itemCount {
-            let columns = (itemCount / rows) + (itemCount % rows > 0 ? 1 : 0)
+        for columns in 1...itemCount {
+            let rows = (itemCount / columns) + (itemCount % columns > 0 ? 1 : 0)
             let itemSize = itemSizeFor(rows: rows, columns: columns)
             let itemArea = itemSize.width * itemSize.height
             if largestItemArea == nil || itemArea > largestItemArea! {
                 largestItemArea = itemArea
                 bestLayout = (rowCount: rows, columnCount: columns)
             }
-            
-//            if (rows - 1) * columns < itemCount {
-//                let itemAspectRatio = sizeAspectRatio * (Double(rows)/Double(columns))
-//                let variance = abs(itemAspectRatio - desiredItemAspectRatio)
-//                if smallestVariance == nil || variance < smallestVariance! {
-//                    smallestVariance = variance
-//                    bestLayout = (rowCount: rows, columnCount: columns)
-//                }
-//            }
         }
         rowCount = bestLayout.rowCount
         columnCount = bestLayout.columnCount
@@ -92,9 +82,8 @@ struct ExactAspectTopToBottom: GridLayoutWithGap {
             return CGPoint.zero
         } else {
             return CGPoint(
-                x: (colPos + 0.5) * itemSize.width + gap * colPos,
-//                    + (areaSize.width - itemSize.width * CGFloat(columnCount)) / 2,
-                y: (rowPos + 0.5) * itemSize.height + gap * rowPos
+                x: 0.5 * itemSize.width + (itemSize.width + gap) * colPos,
+                y: 0.5 * itemSize.height + (itemSize.height + gap) * rowPos
             )
         }
     }

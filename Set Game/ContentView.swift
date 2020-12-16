@@ -16,9 +16,9 @@ struct ContentView: View {
             Button("New game") {
                 newGame()
             }
-            .padding()
+//            .padding()
             
-            GridWithGap(viewModel.openedCards, aspectRatio: 1.5, gap: 4){ card in
+            GridWithGap(viewModel.openedCards, aspectRatio: 1.5, gap: 11){ card in
                 CardView(card: card)
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.25)){
@@ -31,10 +31,9 @@ struct ContentView: View {
                             removal: AnyTransition.offset(randomOffScreenOffset())
                         )
                     )
-
-                    .padding(4)
             }
-            .padding()
+//            .padding()
+            .layoutPriority(1)
             .onAppear{ newGame() }
             
             Spacer()
@@ -46,9 +45,10 @@ struct ContentView: View {
                 }
             }
             .disabled(viewModel.isDeckEmpty)
-            .padding()
+//            .padding()
 
         }
+        .padding()
         
     }
     

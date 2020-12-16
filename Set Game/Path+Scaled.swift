@@ -15,12 +15,12 @@ extension Path {
         return applying(CGAffineTransform(scaleX: scaleFactor, y: scaleFactor))
     }
     
-    func fit(to rect: CGRect) -> Path {
-        let dX = rect.minX - boundingRect.minX
-        let dY = rect.minY - boundingRect.minY
-        return scaled(toFit: rect).applying(CGAffineTransform(translationX: dX, y: dY))
-        
-    }
+//    func fit(to rect: CGRect) -> Path {
+//        let dX = rect.minX - boundingRect.minX
+//        let dY = rect.minY - boundingRect.minY
+//        return scaled(toFit: rect).applying(CGAffineTransform(translationX: dX, y: dY))
+//        
+//    }
     
 }
 
