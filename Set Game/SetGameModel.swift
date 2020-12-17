@@ -9,7 +9,7 @@ import Foundation
 
 struct SetGameModel {
     
-    private var deck: [Card] = []
+    var deck: [Card] = []
     var openedCards: [Card] = []
     var flewAwayCards: [Card] = []
     var selectedIndices: [Int] {

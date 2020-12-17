@@ -16,7 +16,6 @@ struct ContentView: View {
             Button("New game") {
                 newGame()
             }
-//            .padding()
             
             GridWithGap(viewModel.openedCards, aspectRatio: 1.5, gap: 11){ card in
                 CardView(card: card)
@@ -32,20 +31,31 @@ struct ContentView: View {
                         )
                     )
             }
-//            .padding()
             .layoutPriority(1)
             .onAppear{ newGame() }
             
             Spacer()
             
             
-            Button("Deal 3 more cards") {
+            Button {
                 withAnimation(.easeInOut(duration: 0.5)) {
                     viewModel.deal3MoreCards()
                 }
+            } label : {
+                
+                VStack {
+                    ZStack {
+                        ForEach(viewModel.deckCards) { card in
+                            CardView(card: card)
+                                .frame(height: 44)
+                        }
+                    }
+                    .padding(.bottom, 11)
+                    
+                    Text("Deal 3 more cards")
+                }
             }
             .disabled(viewModel.isDeckEmpty)
-//            .padding()
 
         }
         .padding()

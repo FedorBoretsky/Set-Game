@@ -18,6 +18,10 @@ class SetGameViewModel: ObservableObject {
         model.openedCards
     }
     
+    var deckCards: [SetGameModel.Card] {
+        model.deck
+    }
+
     var isDeckEmpty: Bool {
         model.isDeckEmpty
     }
