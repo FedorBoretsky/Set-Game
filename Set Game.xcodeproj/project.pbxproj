@@ -16,6 +16,7 @@
 		9F18C3B5257C40D60073FA85 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F18C3B3257C40D60073FA85 /* LaunchScreen.storyboard */; };
 		9F18C3BE257C411C0073FA85 /* SetGameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F18C3BD257C411C0073FA85 /* SetGameModel.swift */; };
 		9F1A6441257CBD340057B653 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F1A6440257CBD340057B653 /* CardView.swift */; };
+		9F1F047A2592512B001B66E5 /* RectCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F1F04792592512B001B66E5 /* RectCollector.swift */; };
 		9F459EE92587F25600D9712E /* ExactAspectTopToBottom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F459EE72587F25600D9712E /* ExactAspectTopToBottom.swift */; };
 		9F459EEA2587F25600D9712E /* GridWithGap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F459EE82587F25600D9712E /* GridWithGap.swift */; };
 		9F4EC99A2589154B0056BBBF /* CardFace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4EC9992589154B0056BBBF /* CardFace.swift */; };
@@ -35,6 +36,7 @@
 		9F18C3B6257C40D60073FA85 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9F18C3BD257C411C0073FA85 /* SetGameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGameModel.swift; sourceTree = "<group>"; };
 		9F1A6440257CBD340057B653 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		9F1F04792592512B001B66E5 /* RectCollector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RectCollector.swift; sourceTree = "<group>"; };
 		9F459EE72587F25600D9712E /* ExactAspectTopToBottom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExactAspectTopToBottom.swift; sourceTree = "<group>"; };
 		9F459EE82587F25600D9712E /* GridWithGap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridWithGap.swift; sourceTree = "<group>"; };
 		9F4EC9992589154B0056BBBF /* CardFace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardFace.swift; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 				9F18C3BD257C411C0073FA85 /* SetGameModel.swift */,
 				9F01E0DE2584190800AFD55C /* SetGameVM.swift */,
 				9F18C3AC257C40D60073FA85 /* ContentView.swift */,
+				9F1F04792592512B001B66E5 /* RectCollector.swift */,
 				9F1A6440257CBD340057B653 /* CardView.swift */,
 				9F4EC9992589154B0056BBBF /* CardFace.swift */,
 				9FD831BB2582D1DE00EAC708 /* Path+Scaled.swift */,
@@ -172,6 +175,7 @@
 				9F01E0DF2584190800AFD55C /* SetGameVM.swift in Sources */,
 				9F18C3BE257C411C0073FA85 /* SetGameModel.swift in Sources */,
 				9F4EC99A2589154B0056BBBF /* CardFace.swift in Sources */,
+				9F1F047A2592512B001B66E5 /* RectCollector.swift in Sources */,
 				9F18C3A9257C40D60073FA85 /* AppDelegate.swift in Sources */,
 				9FD831BC2582D1DE00EAC708 /* Path+Scaled.swift in Sources */,
 				9F459EE92587F25600D9712E /* ExactAspectTopToBottom.swift in Sources */,

@@ -10,6 +10,14 @@ import SwiftUI
 
 
 func colorForFeatureValue(_ cardFeature: SetGameModel.Card.ColorFeature) -> Color {
+//    switch cardFeature {
+//    case .red:
+//        return Color(#colorLiteral(red: 1, green: 0, blue: 0.1025861391, alpha: 1))
+//    case .green:
+//        return Color(#colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1))
+//    case .purple:
+//        return Color(#colorLiteral(red: 0.4906382445, green: 0, blue: 1, alpha: 1))
+//    }
     switch cardFeature {
     case .red:
         return Color(#colorLiteral(red: 0.9449447989, green: 0.5995458961, blue: 0.4950096011, alpha: 1))
