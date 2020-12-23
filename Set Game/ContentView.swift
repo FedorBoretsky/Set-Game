@@ -10,11 +10,13 @@ import SwiftUI
 struct DealingAdjustment {
     let offset: CGSize
     let scale: CGSize
+    let rotation: Double
     
     static var noDeviation: DealingAdjustment {
         DealingAdjustment(
             offset: CGSize.zero,
-            scale: CGSize(width: 1, height: 1)
+            scale: CGSize(width: 1, height: 1),
+            rotation: 0
         )
     }
 }
@@ -36,7 +38,8 @@ struct ContentView: View {
             
             // Opened cards
             GridWithGap(viewModel.openedCards, aspectRatio: 1.5, gap: 11){ card in
-                CardView(card: card)
+                CardView(card: card, rotation: dealingAdjustments¨[card.id, default: .noDeviation].rotation)
+                    .zIndex(2)
                     .background(MyPreferenceViewSetter(id: card.id))
                     .transition(
                         AnyTransition.asymmetric(
@@ -47,12 +50,7 @@ struct ContentView: View {
                     // Apply scale card first to avoid scaling other geometries.
                     .scaleEffect(dealingAdjustments¨[card.id, default: .noDeviation].scale, anchor: .topLeading)
                     .offset(dealingAdjustments¨[card.id, default: .noDeviation].offset)
-                    .onAppear{
-                        dealingAdjustments¨[card.id] = dealingAdjustmentForCard(card)
-                        withAnimation(.easeInOut(duration: 0.3)){
-                            dealingAdjustments¨[card.id] = DealingAdjustment.noDeviation
-                        }
-                    }
+                    .onAppear{ startDealingAnimation(for: card) }
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.25)){
                             viewModel.choose(card: card)
@@ -75,7 +73,7 @@ struct ContentView: View {
                 VStack {
                     ZStack {
                         ForEach(viewModel.deckCards) { card in
-                            CardView(card: card)
+                            CardView(card: card, rotation: 180)
                                 .frame(height: 44)
                                 .background(MyPreferenceViewSetter(id: "deck"))
 
@@ -94,37 +92,23 @@ struct ContentView: View {
             for p in preferences {
                 self.storedRects¨[p.id] = p.rect
             }
-//            printRects("AAA")
-//            printDealAdjustments("AAA")
-            
         }
         .padding()
         
     }
     
     
-    func printRects(_ title: String) {
-        print("======= \(title) =========")
-        for cp in storedRects¨ {
-            print(cp)
-        }
-        print("=====================")
-        
-    }
-
-    func printDealAdjustments(_ title: String) {
-        print("======= \(title) =========")
-        for cp in dealingAdjustments¨ {
-            print(cp)
-        }
-        print("=====================")
-        
-    }
 
     func newGame() {
-//        withAnimation(.easeInOut(duration: 0.5)) {
             viewModel.newGame()
-//        }
+    }
+    
+    
+    func startDealingAnimation(for card: SetGameModel.Card) {
+        dealingAdjustments¨[card.id] = dealingAdjustmentForCard(card)
+        withAnimation(.easeInOut(duration: 3)){
+            dealingAdjustments¨[card.id] = DealingAdjustment.noDeviation
+        }
     }
     
     func dealingAdjustmentForCard(_ card: SetGameModel.Card) -> DealingAdjustment {
@@ -141,7 +125,7 @@ struct ContentView: View {
             height: deckRect.height / cardRect.height
         )
 
-        return DealingAdjustment(offset: offset, scale: scale)
+        return DealingAdjustment(offset: offset, scale: scale, rotation: 180)
     }
     
     func randomOffScreenOffset() -> CGSize {
