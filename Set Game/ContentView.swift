@@ -59,7 +59,7 @@ struct ContentView: View {
 
             }
             .zIndex(1)
-            .layoutPriority(1)
+//            .layoutPriority(1)
             .onAppear{ newGame() }
             
             // Deck
@@ -76,7 +76,6 @@ struct ContentView: View {
                             CardView(card: card, rotation: 180)
                                 .frame(height: 44)
                                 .background(MyPreferenceViewSetter(id: "deck"))
-
                         }
                     }
                     .padding(.bottom, 11)

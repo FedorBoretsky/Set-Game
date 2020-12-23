@@ -29,7 +29,7 @@ struct GridWithGap<Item, ItemView>: View where Item: Identifiable, ItemView: Vie
     }
     
     private func body(for layout: GridLayoutWithGap) -> some View {
-        ForEach(items¨) { item in
+        ForEach(items¨.reversed()) { item in
             bodyOfItem(for: item, in: layout)
         }
     }
