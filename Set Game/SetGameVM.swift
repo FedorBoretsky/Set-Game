@@ -22,6 +22,10 @@ class SetGameViewModel: ObservableObject {
         model.deck
     }
 
+    var score: Int {
+        model.score
+    }
+    
     var isDeckEmpty: Bool {
         model.isDeckEmpty
     }

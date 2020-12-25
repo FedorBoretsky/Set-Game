@@ -12,6 +12,9 @@ struct SetGameModel {
     var deck: [Card] = []
     var openedCards: [Card] = []
     var flewAwayCards: [Card] = []
+    
+    private(set) var score: Int = 0
+    
     var selectedIndices: [Int] {
         openedCards.indices.filter{ openedCards[$0].isSelected }
     }
@@ -94,12 +97,13 @@ struct SetGameModel {
     
     
     mutating func deal3MoreCards() {
-        let previousSelection = selectedIndices
-        if isSet(previousSelection) {
-            flyAway(previousSelection)
-            dealWithReplacing(indices: previousSelection)
+        let selection = selectedIndices
+        if isSet(selection) {
+            flyAway(selection)
+            dealWithReplacing(indices: selection)
         } else {
             deal(numberOfCards: 3)
+            score -= 1
         }
     }
     
@@ -112,6 +116,7 @@ struct SetGameModel {
     
     mutating func startGame() {
         deck = Self.fullDeck().shuffled()
+        score = 0
         deal(numberOfCards: 12)
     }
     
@@ -170,6 +175,11 @@ struct SetGameModel {
         
         if newSelection.count == 3 {
             let isMatched = isSet(newSelection)
+            if isMatched {
+                score += 1
+            } else {
+                score -= 1
+            }
             for i in newSelection {
                 openedCards[i].isMatched = isMatched ? .matched : .notMatched
             }

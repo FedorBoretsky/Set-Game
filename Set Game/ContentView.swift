@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+let scoreFrameSize: CGFloat = 66
+
 struct DealingAdjustment {
     let offset: CGSize
     let scale: CGSize
@@ -32,8 +34,13 @@ struct ContentView: View {
         VStack {
             
             // Header
-            Button("New game") {
-                newGame()
+            HStack(alignment: .firstTextBaseline) {
+                Text("Set game")
+                    .font(.largeTitle)
+                Spacer()
+                Button("New game") {
+                    newGame()
+                }
             }
             
             // Opened cards
@@ -59,31 +66,43 @@ struct ContentView: View {
 
             }
             .zIndex(1)
-//            .layoutPriority(1)
             .onAppear{ newGame() }
             
-            // Deck
             Spacer()
-            Button {
-                withAnimation(.easeInOut(duration: 0.5)) {
-                    viewModel.deal3MoreCards()
+            
+            HStack(alignment: .bottom){
+                // Score
+                VStack(alignment: .leading){
+                        Text("Score:")
+                    Text("\(viewModel.score)")
+                            .font(Font.system(size: scoreFrameSize, weight: .thin))
+                    Text(" ")
+
                 }
-            } label : {
-                
-                VStack {
-                    ZStack {
-                        ForEach(viewModel.deckCards) { card in
-                            CardView(card: card, rotation: 180)
-                                .frame(height: 44)
-                                .background(MyPreferenceViewSetter(id: "deck"))
-                        }
+                .animation(.none)
+                Spacer()
+                // Deck
+                Button {
+                    withAnimation(.easeInOut(duration: 0.5)) {
+                        viewModel.deal3MoreCards()
                     }
-                    .padding(.bottom, 11)
+                } label : {
                     
-                    Text("Deal 3 more cards")
+                    VStack {
+                        ZStack {
+                            ForEach(viewModel.deckCards) { card in
+                                CardView(card: card, rotation: 180)
+                                    .frame(height: 44)
+                                    .background(MyPreferenceViewSetter(id: "deck"))
+                            }
+                        }
+                        .padding(.bottom, 11)
+                        
+                        Text("Deal 3 more cards")
+                    }
                 }
+                .disabled(viewModel.isDeckEmpty)
             }
-            .disabled(viewModel.isDeckEmpty)
 
         }
         .coordinateSpace(name: "board")
@@ -105,7 +124,7 @@ struct ContentView: View {
     
     func startDealingAnimation(for card: SetGameModel.Card) {
         dealingAdjustments¨[card.id] = dealingAdjustmentForCard(card)
-        withAnimation(.easeInOut(duration: 3)){
+        withAnimation(.easeInOut(duration: 0.3)){
             dealingAdjustments¨[card.id] = DealingAdjustment.noDeviation
         }
     }

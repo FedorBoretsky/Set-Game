@@ -39,10 +39,13 @@ struct CardView: View {
                 // Cover
                 Group{
                     RoundedRectangle(cornerRadius: geometry.size.height * cornerRadiusFactor)
-                        .foregroundColor(.gray)
-                        .padding(4)
+                        .foregroundColor(Color.white)
                     RoundedRectangle(cornerRadius: geometry.size.height * cornerRadiusFactor)
-                        .stroke(Color.black.opacity(card.isSelected ? 1 : 0.25), lineWidth: card.isSelected ? 1.5 : 1)
+                        .foregroundColor(Color.accentColor)
+                        .opacity(0.66)
+                        .padding(5)
+                    RoundedRectangle(cornerRadius: geometry.size.height * cornerRadiusFactor)
+                        .stroke(Color.accentColor.opacity(card.isSelected ? 1 : 1), lineWidth: card.isSelected ? 1.5 : 1)
                 }
                 .opacity(isFaceUp ? 0 : 1)
                 
