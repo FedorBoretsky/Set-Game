@@ -7,13 +7,73 @@
 
 import Foundation
 
+
 struct SetGameModel {
     
     var deck: [Card] = []
     var openedCards: [Card] = []
     var flewAwayCards: [Card] = []
     
-    private(set) var score: Int = 0
+    static private let fewSeconds: Double = 4
+    
+    
+    // MARK: - Cheat Mode
+    //
+    //
+    var cheatMode: Bool = false
+    {
+        didSet {
+            if cheatMode {
+                score -= 0.25
+                //
+                // Prepare cheat info
+                let sets¨ = findSetsInOpenedCards()
+                let highlightedSet = sets¨.randomElement() ?? []
+                for i in 0 ..< openedCards.count {
+                    openedCards[i].isCheatHighlight = highlightedSet.contains(openedCards[i])
+                }
+                //
+                // Stop after few seconds
+                let stopCheatTimer = Timer(timeInterval: Self.fewSeconds, repeats: false){ [unowned self] _ in
+                    cheatMode = false
+                }
+                RunLoop.current.add(stopCheatTimer, forMode: .common)
+            } else {
+                cheatModeOff()
+            }
+        }
+    }
+    
+//    mutating func cheatModeOn() {
+//        score -= 0.25
+//        //
+//        // Prepare cheat info
+//        let sets¨ = findSetsInOpenedCards()
+//        let highlightedSet = sets¨.randomElement() ?? []
+//        for i in 0 ..< openedCards.count {
+//            openedCards[i].isCheatHighlight = highlightedSet.contains(openedCards[i])
+//        }
+//        //
+//        // Stop after few seconds
+//        let stopCheatTimer = Timer(timeInterval: Self.fewSeconds, repeats: false){_ in
+//            cheatMode = false
+//        }
+//        RunLoop.current.add(stopCheatTimer, forMode: .common)
+//    }
+
+    mutating func cheatModeOff() {
+        for i in 0 ..< openedCards.count {
+            openedCards[i].isCheatHighlight = false
+        }
+    }
+
+    
+    
+    var isThereNoSetInOpenedCards: Bool {
+        return findSetsInOpenedCards().isEmpty
+    }
+    
+    private(set) var score: Double = 0
     
     var selectedIndices: [Int] {
         openedCards.indices.filter{ openedCards[$0].isSelected }
@@ -65,17 +125,33 @@ struct SetGameModel {
                isFeatureMakeUpSet(Card1.shading, Card2.shading, Card3.shading)
     }
     
-    private func isSet(_ i1: Int, _ i2: Int, _ i3: Int) -> Bool {
-        return Self.isSet(openedCards[i1], openedCards[i2], openedCards[i3])
-    }
+//    private func isSet(_ i1: Int, _ i2: Int, _ i3: Int) -> Bool {
+//        return Self.isSet(openedCards[i1], openedCards[i2], openedCards[i3])
+//    }
     
     private func isSet(_ indices: [Int]) -> Bool {
         if indices.count == 3 {
-            return isSet(indices[0], indices[1], indices[2])
+            return Self.isSet(openedCards[indices[0]], openedCards[indices[1]], openedCards[indices[2]])
         } else {
             return false
         }
     }
+    
+    
+    private func findSetsInOpenedCards() -> [[Card]] {
+        var sets¨: [[Card]] = []
+        for i1 in 0 ..< openedCards.count {
+            for i2 in (i1 + 1) ..< openedCards.count {
+                for i3 in (i2 + 1) ..< openedCards.count {
+                    if Self.isSet(openedCards[i1], openedCards[i2], openedCards[i3]) {
+                        sets¨.append([openedCards[i1], openedCards[i2], openedCards[i3]])
+                    }
+                }
+            }
+        }
+        return sets¨
+    }
+        
     
     mutating func deal(numberOfCards: Int) {
         openedCards += deck.suffix(numberOfCards)
@@ -190,7 +266,7 @@ struct SetGameModel {
 
 
     
-    struct Card: Identifiable {
+    struct Card: Identifiable, Equatable {
         let color: ColorFeature
         let number: NumberFeature
         let shape: ShapeFeature
@@ -205,7 +281,7 @@ struct SetGameModel {
                 ].joined(separator: "_")
             }
         }
-        
+                
         enum ColorFeature: String, CaseIterable {
             case red
             case green
@@ -229,13 +305,15 @@ struct SetGameModel {
         
         
         var isSelected: Bool = false
-        var isMatched: MatchingStatus = .inapplicable
         
+        var isMatched: MatchingStatus = .inapplicable
         enum MatchingStatus {
             case inapplicable
             case matched
             case notMatched
         }
+        
+        var isCheatHighlight: Bool = false
         
         
     }

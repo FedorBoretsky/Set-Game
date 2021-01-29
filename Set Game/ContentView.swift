@@ -7,8 +7,11 @@
 
 import SwiftUI
 
+// TODO: Need explanation
+
 let scoreFrameSize: CGFloat = 66
 
+// TODO: - Need explanation
 struct DealingAdjustment {
     let offset: CGSize
     let scale: CGSize
@@ -26,9 +29,9 @@ struct DealingAdjustment {
 struct ContentView: View {
     @ObservedObject var viewModel = SetGameViewModel()
     
+    // TODO: Need explanation
     @State private var storedRects¨: [String: CGRect] = Dictionary()
     @State private var dealingAdjustments¨: [String: DealingAdjustment] = Dictionary()
-
     
     var body: some View {
         VStack {
@@ -46,7 +49,6 @@ struct ContentView: View {
             // Opened cards
             GridWithGap(viewModel.openedCards, aspectRatio: 1.5, gap: 11){ card in
                 CardView(card: card, rotation: dealingAdjustments¨[card.id, default: .noDeviation].rotation)
-                    .zIndex(2)
                     .background(MyPreferenceViewSetter(id: card.id))
                     .transition(
                         AnyTransition.asymmetric(
@@ -54,6 +56,7 @@ struct ContentView: View {
                             removal: AnyTransition.offset(randomOffScreenOffset())
                         )
                     )
+                    .opacity( viewModel.isCheatMode ? (card.isCheatHighlight ? 1 : 0) : 1)
                     // Apply scale card first to avoid scaling other geometries.
                     .scaleEffect(dealingAdjustments¨[card.id, default: .noDeviation].scale, anchor: .topLeading)
                     .offset(dealingAdjustments¨[card.id, default: .noDeviation].offset)
@@ -74,7 +77,7 @@ struct ContentView: View {
                 // Score
                 VStack(alignment: .leading){
                         Text("Score:")
-                    Text("\(viewModel.score)")
+                    Text("\(viewModel.score, specifier: "%g")")
                             .font(Font.system(size: scoreFrameSize, weight: .thin))
                     Text(" ")
 
@@ -102,6 +105,34 @@ struct ContentView: View {
                     }
                 }
                 .disabled(viewModel.isDeckEmpty)
+                // Cheat
+                VStack {
+                    Image("cheatMode")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 66, height: 66, alignment: .center)
+                    Text("Cheat")
+                        .foregroundColor(viewModel.isCheatMode ? .red : .black)
+                }
+                .onLongPressGesture(
+                    minimumDuration: 5,
+                    maximumDistance: 0,
+                    pressing: { inProgress in
+//                        isCheatMode = inProgress
+                        if inProgress {
+                            viewModel.cheatModeOn()
+                        } else {
+                            viewModel.cheatModeOff()
+                        }
+                    },
+                    perform: {
+//                        isCheatMode = false
+//                        cheatPrompt = nil
+                        viewModel.cheatModeOff()
+                    }
+                )
+
+
             }
 
         }
