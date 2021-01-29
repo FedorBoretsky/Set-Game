@@ -8,41 +8,41 @@
 import Foundation
 
 
-struct SetGameModel {
+class SetGameModel: ObservableObject {
     
-    var deck: [Card] = []
-    var openedCards: [Card] = []
+    @Published var deck: [Card] = []
+    @Published var openedCards: [Card] = []
     var flewAwayCards: [Card] = []
     
     static private let fewSeconds: Double = 4
     
     
-    // MARK: - Cheat Mode
-    //
-    //
-    var cheatMode: Bool = false
-    {
-        didSet {
-            if cheatMode {
-                score -= 0.25
-                //
-                // Prepare cheat info
-                let sets¨ = findSetsInOpenedCards()
-                let highlightedSet = sets¨.randomElement() ?? []
-                for i in 0 ..< openedCards.count {
-                    openedCards[i].isCheatHighlight = highlightedSet.contains(openedCards[i])
-                }
-                //
-                // Stop after few seconds
-                let stopCheatTimer = Timer(timeInterval: Self.fewSeconds, repeats: false){ [unowned self] _ in
-                    cheatMode = false
-                }
-                RunLoop.current.add(stopCheatTimer, forMode: .common)
-            } else {
-                cheatModeOff()
-            }
-        }
-    }
+//    // MARK: - Cheat Mode
+//    //
+//    //
+//    var cheatMode: Bool = false
+//    {
+//        didSet {
+//            if cheatMode {
+//                score -= 0.25
+//                //
+//                // Prepare cheat info
+//                let sets¨ = findSetsInOpenedCards()
+//                let highlightedSet = sets¨.randomElement() ?? []
+//                for i in 0 ..< openedCards.count {
+//                    openedCards[i].isCheatHighlight = highlightedSet.contains(openedCards[i])
+//                }
+//                //
+//                // Stop after few seconds
+//                let stopCheatTimer = Timer(timeInterval: Self.fewSeconds, repeats: false){ [unowned self] _ in
+//                    cheatMode = false
+//                }
+//                RunLoop.current.add(stopCheatTimer, forMode: .common)
+//            } else {
+//                cheatModeOff()
+//            }
+//        }
+//    }
     
 //    mutating func cheatModeOn() {
 //        score -= 0.25
@@ -61,11 +61,11 @@ struct SetGameModel {
 //        RunLoop.current.add(stopCheatTimer, forMode: .common)
 //    }
 
-    mutating func cheatModeOff() {
-        for i in 0 ..< openedCards.count {
-            openedCards[i].isCheatHighlight = false
-        }
-    }
+//    mutating func cheatModeOff() {
+//        for i in 0 ..< openedCards.count {
+//            openedCards[i].isCheatHighlight = false
+//        }
+//    }
 
     
     
@@ -73,7 +73,7 @@ struct SetGameModel {
         return findSetsInOpenedCards().isEmpty
     }
     
-    private(set) var score: Double = 0
+    @Published private(set) var score: Double = 0
     
     var selectedIndices: [Int] {
         openedCards.indices.filter{ openedCards[$0].isSelected }
@@ -153,7 +153,7 @@ struct SetGameModel {
     }
         
     
-    mutating func deal(numberOfCards: Int) {
+    func deal(numberOfCards: Int) {
         openedCards += deck.suffix(numberOfCards)
         if numberOfCards <= deck.count {
             deck.removeLast(numberOfCards)
@@ -162,7 +162,8 @@ struct SetGameModel {
         }
     }
     
-    mutating func dealWithReplacing(indices: [Int]) {
+    func dealWithReplacing(indices: [Int]) {
+        // TODO: Too complicated. Imply that deleting of cards already done outside this function.
         for index in indices.sorted(by: {$0 < $1}) {
             if let card = deck.popLast() {
                 openedCards.insert(card, at: index)
@@ -172,7 +173,7 @@ struct SetGameModel {
     
     
     
-    mutating func deal3MoreCards() {
+    func deal3MoreCards() {
         let selection = selectedIndices
         if isSet(selection) {
             flyAway(selection)
@@ -184,33 +185,35 @@ struct SetGameModel {
     }
     
     
-    private mutating func flyAway(_ indices: [Int]) {
+    func flyAway(_ indices: [Int]) {
         for index in indices.sorted(by: {$0 > $1}) {
             openedCards.remove(at: index)
         }
     }
     
-    mutating func startGame() {
+    func startGame() {
         deck = Self.fullDeck().shuffled()
         score = 0
         deal(numberOfCards: 12)
     }
     
-    mutating func stopGame() {
+    func stopGame() {
+        // TODO: Is stopGame() ever used? What the difference between stopGame() and cleanTable()?
         openedCards = []
     }
     
-    mutating func newGame() {
+    func newGame() {
         stopGame()
         startGame()
     }
 
     
-    mutating func cleanTable() {
+    func cleanTable() {
+        // TODO: Is cleanTable() ever used? What the difference between stopGame() and cleanTable()?
         openedCards = []
     }
     
-    mutating func choose(card: Card) {
+    func choose(card: Card) {
         guard let choosenIndex = openedCards.firstIndex(matching: card) else {
             return
         }
@@ -229,7 +232,7 @@ struct SetGameModel {
                 if !previousSelection.contains(choosenIndex) {
                     openedCards[choosenIndex].isSelected = true
                 }
-                flyAway(previousSelection)
+                flyAway(previousSelection)  // TODO: put flyAway action inside dealWithReplacing()
                 if openedCards.count < 12 {
                     dealWithReplacing(indices: previousSelection)
                 }
@@ -240,7 +243,6 @@ struct SetGameModel {
                     openedCards[choosenIndex].isSelected = true
                 }
             }
-            
         }
         
         //
@@ -260,7 +262,6 @@ struct SetGameModel {
                 openedCards[i].isMatched = isMatched ? .matched : .notMatched
             }
         }
-        
         
     }
 

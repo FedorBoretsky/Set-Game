@@ -56,7 +56,7 @@ struct ContentView: View {
                             removal: AnyTransition.offset(randomOffScreenOffset())
                         )
                     )
-                    .opacity( viewModel.isCheatMode ? (card.isCheatHighlight ? 1 : 0) : 1)
+//                    .opacity( viewModel.isCheatMode ? (card.isCheatHighlight ? 1 : 0) : 1)
                     // Apply scale card first to avoid scaling other geometries.
                     .scaleEffect(dealingAdjustments¨[card.id, default: .noDeviation].scale, anchor: .topLeading)
                     .offset(dealingAdjustments¨[card.id, default: .noDeviation].offset)
@@ -105,32 +105,33 @@ struct ContentView: View {
                     }
                 }
                 .disabled(viewModel.isDeckEmpty)
-                // Cheat
-                VStack {
-                    Image("cheatMode")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 66, height: 66, alignment: .center)
-                    Text("Cheat")
-                        .foregroundColor(viewModel.isCheatMode ? .red : .black)
-                }
-                .onLongPressGesture(
-                    minimumDuration: 5,
-                    maximumDistance: 0,
-                    pressing: { inProgress in
-//                        isCheatMode = inProgress
-                        if inProgress {
-                            viewModel.cheatModeOn()
-                        } else {
-                            viewModel.cheatModeOff()
-                        }
-                    },
-                    perform: {
-//                        isCheatMode = false
-//                        cheatPrompt = nil
-                        viewModel.cheatModeOff()
-                    }
-                )
+                
+//                // Cheat
+//                VStack {
+//                    Image("cheatMode")
+//                        .resizable()
+//                        .scaledToFit()
+//                        .frame(width: 66, height: 66, alignment: .center)
+//                    Text("Cheat")
+//                        .foregroundColor(viewModel.isCheatMode ? .red : .black)
+//                }
+//                .onLongPressGesture(
+//                    minimumDuration: 5,
+//                    maximumDistance: 0,
+//                    pressing: { inProgress in
+////                        isCheatMode = inProgress
+//                        if inProgress {
+//                            viewModel.cheatModeOn()
+//                        } else {
+//                            viewModel.cheatModeOff()
+//                        }
+//                    },
+//                    perform: {
+////                        isCheatMode = false
+////                        cheatPrompt = nil
+//                        viewModel.cheatModeOff()
+//                    }
+//                )
 
 
             }

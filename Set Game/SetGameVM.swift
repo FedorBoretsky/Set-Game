@@ -6,13 +6,20 @@
 //
 
 import SwiftUI
+import Combine
 
 class SetGameViewModel: ObservableObject {
     
     @Published private var model: SetGameModel = SetGameModel()
     
+    private var sub: AnyCancellable?
     
-    // MARK: - Access to the Model
+    init() {
+        sub = model.objectWillChange.sink{ self.objectWillChange.send() }
+    }
+    
+    
+    // MARK: - Access to the Model's data
     
     var openedCards: [SetGameModel.Card] {
         model.openedCards
@@ -30,9 +37,9 @@ class SetGameViewModel: ObservableObject {
         model.isDeckEmpty
     }
     
-    var isCheatMode: Bool {
-        model.cheatMode
-    }
+//    var isCheatMode: Bool {
+//        model.cheatMode
+//    }
     
     // MARK: - Intents
     
@@ -51,11 +58,11 @@ class SetGameViewModel: ObservableObject {
         model.choose(card: card)
     }
     
-    func cheatModeOn() {
-        return model.cheatMode = true
-    }
+//    func cheatModeOn() {
+//        return model.cheatMode = true
+//    }
 
-    func cheatModeOff() {
-        return model.cheatMode = false
-    }
+//    func cheatModeOff() {
+//        return model.cheatMode = false
+//    }
 }
