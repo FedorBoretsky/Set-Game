@@ -17,55 +17,45 @@ class SetGameModel: ObservableObject {
     static private let fewSeconds: Double = 4
     
     
-//    // MARK: - Cheat Mode
-//    //
-//    //
-//    var cheatMode: Bool = false
-//    {
-//        didSet {
-//            if cheatMode {
-//                score -= 0.25
-//                //
-//                // Prepare cheat info
-//                let sets¨ = findSetsInOpenedCards()
-//                let highlightedSet = sets¨.randomElement() ?? []
-//                for i in 0 ..< openedCards.count {
-//                    openedCards[i].isCheatHighlight = highlightedSet.contains(openedCards[i])
-//                }
-//                //
-//                // Stop after few seconds
-//                let stopCheatTimer = Timer(timeInterval: Self.fewSeconds, repeats: false){ [unowned self] _ in
-//                    cheatMode = false
-//                }
-//                RunLoop.current.add(stopCheatTimer, forMode: .common)
-//            } else {
-//                cheatModeOff()
-//            }
-//        }
-//    }
+    // MARK: - Cheat Mode
+    //
+    //
+    var cheatMode: Bool = false
+    {
+        didSet {
+            if cheatMode {
+                cheatModeOn()
+            } else {
+                cheatModeOff()
+            }
+        }
+    }
     
-//    mutating func cheatModeOn() {
-//        score -= 0.25
-//        //
-//        // Prepare cheat info
-//        let sets¨ = findSetsInOpenedCards()
-//        let highlightedSet = sets¨.randomElement() ?? []
-//        for i in 0 ..< openedCards.count {
-//            openedCards[i].isCheatHighlight = highlightedSet.contains(openedCards[i])
-//        }
-//        //
-//        // Stop after few seconds
-//        let stopCheatTimer = Timer(timeInterval: Self.fewSeconds, repeats: false){_ in
-//            cheatMode = false
-//        }
-//        RunLoop.current.add(stopCheatTimer, forMode: .common)
-//    }
+    func cheatModeOn() {
+        score -= 0.25
+        //
+        // Prepare cheat info
+        let sets¨ = findSetsInOpenedCards()
+        let highlightedSet = sets¨.randomElement() ?? []
+        for i in 0 ..< openedCards.count {
+            openedCards[i].isCheatHighlight = highlightedSet.contains(openedCards[i])
+        }
+        //
+        // Stop after few seconds
+        let stopCheatTimer = Timer(timeInterval: Self.fewSeconds, repeats: false){_ in
+            self.cheatMode = false
+        }
+        RunLoop.current.add(stopCheatTimer, forMode: .common)
+    }
 
-//    mutating func cheatModeOff() {
+    func cheatModeOff() {
 //        for i in 0 ..< openedCards.count {
 //            openedCards[i].isCheatHighlight = false
 //        }
-//    }
+        for i in openedCards.indices {
+            openedCards[i].isCheatHighlight = false
+        }
+    }
 
     
     

@@ -56,7 +56,7 @@ struct ContentView: View {
                             removal: AnyTransition.offset(randomOffScreenOffset())
                         )
                     )
-//                    .opacity( viewModel.isCheatMode ? (card.isCheatHighlight ? 1 : 0) : 1)
+                    .opacity( viewModel.isCheatMode ? (card.isCheatHighlight ? 1 : 0) : 1)
                     // Apply scale card first to avoid scaling other geometries.
                     .scaleEffect(dealingAdjustments¨[card.id, default: .noDeviation].scale, anchor: .topLeading)
                     .offset(dealingAdjustments¨[card.id, default: .noDeviation].offset)
@@ -73,17 +73,18 @@ struct ContentView: View {
             
             Spacer()
             
-            HStack(alignment: .bottom){
+            HStack(alignment: .top){
+                
                 // Score
                 VStack(alignment: .leading){
-                        Text("Score:")
+                    Text("Score:")
                     Text("\(viewModel.score, specifier: "%g")")
                             .font(Font.system(size: scoreFrameSize, weight: .thin))
-                    Text(" ")
 
                 }
                 .animation(.none)
                 Spacer()
+                
                 // Deck
                 Button {
                     withAnimation(.easeInOut(duration: 0.5)) {
@@ -92,6 +93,7 @@ struct ContentView: View {
                 } label : {
                     
                     VStack {
+                        Text("Deal 3 more cards")
                         ZStack {
                             ForEach(viewModel.deckCards) { card in
                                 CardView(card: card, rotation: 180)
@@ -99,39 +101,39 @@ struct ContentView: View {
                                     .background(MyPreferenceViewSetter(id: "deck"))
                             }
                         }
-                        .padding(.bottom, 11)
+                        .frame(width: 66, height: 66, alignment: .center)
                         
-                        Text("Deal 3 more cards")
                     }
                 }
                 .disabled(viewModel.isDeckEmpty)
-                
-//                // Cheat
-//                VStack {
-//                    Image("cheatMode")
-//                        .resizable()
-//                        .scaledToFit()
-//                        .frame(width: 66, height: 66, alignment: .center)
-//                    Text("Cheat")
-//                        .foregroundColor(viewModel.isCheatMode ? .red : .black)
-//                }
-//                .onLongPressGesture(
-//                    minimumDuration: 5,
-//                    maximumDistance: 0,
-//                    pressing: { inProgress in
-////                        isCheatMode = inProgress
-//                        if inProgress {
-//                            viewModel.cheatModeOn()
-//                        } else {
-//                            viewModel.cheatModeOff()
-//                        }
-//                    },
-//                    perform: {
-////                        isCheatMode = false
-////                        cheatPrompt = nil
-//                        viewModel.cheatModeOff()
-//                    }
-//                )
+                Spacer()
+
+                // Cheat
+                VStack {
+                    Text("Cheat")
+                        .foregroundColor(viewModel.isCheatMode ? .red : .black)
+                    Image("cheatMode")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 66, height: 66, alignment: .center)
+                }
+                .onLongPressGesture(
+                    minimumDuration: 5,
+                    maximumDistance: 0,
+                    pressing: { inProgress in
+//                        isCheatMode = inProgress
+                        if inProgress {
+                            viewModel.cheatModeOn()
+                        } else {
+                            viewModel.cheatModeOff()
+                        }
+                    },
+                    perform: {
+//                        isCheatMode = false
+//                        cheatPrompt = nil
+                        viewModel.cheatModeOff()
+                    }
+                )
 
 
             }

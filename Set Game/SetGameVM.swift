@@ -37,9 +37,9 @@ class SetGameViewModel: ObservableObject {
         model.isDeckEmpty
     }
     
-//    var isCheatMode: Bool {
-//        model.cheatMode
-//    }
+    var isCheatMode: Bool {
+        model.cheatMode
+    }
     
     // MARK: - Intents
     
@@ -58,11 +58,11 @@ class SetGameViewModel: ObservableObject {
         model.choose(card: card)
     }
     
-//    func cheatModeOn() {
-//        return model.cheatMode = true
-//    }
+    func cheatModeOn() {
+        return model.cheatMode = true
+    }
 
-//    func cheatModeOff() {
-//        return model.cheatMode = false
-//    }
+    func cheatModeOff() {
+        return model.cheatMode = false
+    }
 }
