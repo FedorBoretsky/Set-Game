@@ -49,15 +49,13 @@ class SetGameModel: ObservableObject {
     }
 
     func cheatModeOff() {
-//        for i in 0 ..< openedCards.count {
-//            openedCards[i].isCheatHighlight = false
-//        }
         for i in openedCards.indices {
             openedCards[i].isCheatHighlight = false
         }
     }
 
     
+    // MARK: -
     
     var isThereNoSetInOpenedCards: Bool {
         return findSetsInOpenedCards().isEmpty
@@ -142,6 +140,7 @@ class SetGameModel: ObservableObject {
         return sets¨
     }
         
+    // MARK: - Deal
     
     func deal(numberOfCards: Int) {
         openedCards += deck.suffix(numberOfCards)
@@ -169,11 +168,14 @@ class SetGameModel: ObservableObject {
             flyAway(selection)
             dealWithReplacing(indices: selection)
         } else {
+            if !findSetsInOpenedCards().isEmpty {
+                score -= 1
+            }
             deal(numberOfCards: 3)
-            score -= 1
         }
     }
     
+    // MARK: -
     
     func flyAway(_ indices: [Int]) {
         for index in indices.sorted(by: {$0 > $1}) {
