@@ -33,18 +33,57 @@ struct ContentView: View {
     @State private var storedRects¨: [String: CGRect] = Dictionary()
     @State private var dealingAdjustments¨: [String: DealingAdjustment] = Dictionary()
     
+    @State private var ii = 0
+    
+    let playersNumCases = ["person.fill", "person.2"]
+    
     var body: some View {
         VStack {
             
             // Header
-            HStack(alignment: .firstTextBaseline) {
+            HStack(alignment: .center) {
                 Text("Set game")
                     .font(.largeTitle)
-                Spacer()
-                Button("New game") {
+                
+                Spacer(minLength: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/)
+                
+
+        
+                Button {
                     newGame()
+                } label: {
+                    Image(systemName: "restart.circle")
                 }
+
+                Spacer(minLength: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/)
+
+                Button {
+                    print("Solo play")
+                } label: {
+                    Image(systemName: "person.circle.fill")
+                }
+                
+                Spacer(minLength: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/)
+
+                Button {
+                    print("Two players")
+                } label: {
+                    Image(systemName: "person.2.circle")
+                }
+                
+                Spacer(minLength: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/)
+
+                Button {
+                    print("Rules")
+                } label: {
+                    Image(systemName: "questionmark.circle")
+                }
+                
             }
+            .imageScale(.large)
+
+            
+
             
             // Opened cards
             GridWithGap(viewModel.openedCards, aspectRatio: 1.5, gap: 11){ card in
@@ -77,14 +116,14 @@ struct ContentView: View {
                 
                 // Score
                 VStack(alignment: .leading){
-                    Text("Score:")
+                    Text("Score")
                     Text("\(viewModel.score, specifier: "%g")")
-                            .font(Font.system(size: scoreFrameSize, weight: .thin))
-
+                        .font(Font.system(size: scoreFrameSize, weight: .thin))
+                    
                 }
                 .animation(.none)
                 Spacer()
-                
+
                 // Deck
                 Button {
                     withAnimation(.easeInOut(duration: 0.5)) {
@@ -93,7 +132,7 @@ struct ContentView: View {
                 } label : {
                     
                     VStack {
-                        Text("Deal 3 more cards")
+                        Text("3 more cards")
                         ZStack {
                             ForEach(viewModel.deckCards) { card in
                                 CardView(card: card, rotation: 180)
@@ -108,32 +147,35 @@ struct ContentView: View {
                 .disabled(viewModel.isDeckEmpty)
                 Spacer()
 
+                
                 // Cheat
-                VStack {
-                    Text("Cheat")
-                        .foregroundColor(viewModel.isCheatMode ? .red : .black)
-                    Image("cheatMode")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 66, height: 66, alignment: .center)
-                }
-                .onLongPressGesture(
-                    minimumDuration: 5,
-                    maximumDistance: 0,
-                    pressing: { inProgress in
-//                        isCheatMode = inProgress
-                        if inProgress {
-                            viewModel.cheatModeOn()
-                        } else {
+                Button {
+                    // No tap action
+                } label: {
+                    VStack {
+                        Text("Cheat")
+                        Image("cheatMode")
+                            .renderingMode(/*@START_MENU_TOKEN@*/.template/*@END_MENU_TOKEN@*/)
+                            .frame(width: 66, height: 66, alignment: .center)
+                    }
+                    .onLongPressGesture(
+                        minimumDuration: 5,
+                        maximumDistance: 0,
+                        pressing: { inProgress in
+                            //                        isCheatMode = inProgress
+                            if inProgress {
+                                viewModel.cheatModeOn()
+                            } else {
+                                viewModel.cheatModeOff()
+                            }
+                        },
+                        perform: {
+                            //                        isCheatMode = false
+                            //                        cheatPrompt = nil
                             viewModel.cheatModeOff()
                         }
-                    },
-                    perform: {
-//                        isCheatMode = false
-//                        cheatPrompt = nil
-                        viewModel.cheatModeOff()
-                    }
-                )
+                    )
+                }
 
 
             }
