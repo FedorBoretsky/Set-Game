@@ -117,7 +117,7 @@ struct ContentView: View {
                 // Score
                 VStack(alignment: .leading){
                     Text("Score")
-                    Text("\(viewModel.score, specifier: "%g")")
+                    Text("\(viewModel.scoreOfPlayer(0), specifier: "%g")")
                         .font(Font.system(size: scoreFrameSize, weight: .thin))
                     
                 }

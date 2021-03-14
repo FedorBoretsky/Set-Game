@@ -28,10 +28,6 @@ class SetGameViewModel: ObservableObject {
     var deckCards: [SetGameModel.Card] {
         model.deck
     }
-
-    var score: Double {
-        model.score
-    }
     
     var isDeckEmpty: Bool {
         model.isDeckEmpty
@@ -40,6 +36,16 @@ class SetGameViewModel: ObservableObject {
     var isCheatMode: Bool {
         model.cheatMode
     }
+    
+    var numberOfPlayers: Int {
+        model.numberOfPlayers
+    }
+    
+    func scoreOfPlayer(_ playerIndex: Int) -> Double {
+        model.score[playerIndex]
+    }
+
+    
     
     // MARK: - Intents
     

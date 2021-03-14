@@ -32,7 +32,10 @@ class SetGameModel: ObservableObject {
     }
     
     func cheatModeOn() {
-        score -= 0.25
+        // Penalize cheating
+        // TODO: Fix moving buttons when change sign. Try add one decimal penalty 0.3 without drifting buttons.
+        changeScoreOfActivePlayer(by: -1)
+        
         //
         // Prepare cheat info
         let sets¨ = findSetsInOpenedCards()
@@ -53,15 +56,31 @@ class SetGameModel: ObservableObject {
             openedCards[i].isCheatHighlight = false
         }
     }
+    
+    // MARK: - Players
+    
+    @Published var numberOfPlayers: Int = 1
+    
+    @Published var activePlayerIndex: Int? = 0
 
     
-    // MARK: -
+    // MARK: - Score
+    
+    @Published private(set) var score: [Double] = [0]
+    
+    func changeScoreOfActivePlayer(by addition: Double) {
+        guard let index = activePlayerIndex else {
+            assertionFailure("\(#function) failed, activePlayerIndex == nil")
+            return
+        }
+        score[index] += addition
+    }
+    
     
     var isThereNoSetInOpenedCards: Bool {
         return findSetsInOpenedCards().isEmpty
     }
     
-    @Published private(set) var score: Double = 0
     
     var selectedIndices: [Int] {
         openedCards.indices.filter{ openedCards[$0].isSelected }
@@ -169,7 +188,7 @@ class SetGameModel: ObservableObject {
             dealWithReplacing(indices: selection)
         } else {
             if !findSetsInOpenedCards().isEmpty {
-                score -= 1
+                changeScoreOfActivePlayer(by: -1)
             }
             deal(numberOfCards: 3)
         }
@@ -185,7 +204,7 @@ class SetGameModel: ObservableObject {
     
     func startGame() {
         deck = Self.fullDeck().shuffled()
-        score = 0
+        score = Array(repeating: 0, count: numberOfPlayers)
         deal(numberOfCards: 12)
     }
     
@@ -246,9 +265,9 @@ class SetGameModel: ObservableObject {
         if newSelection.count == 3 {
             let isMatched = isSet(newSelection)
             if isMatched {
-                score += 1
+                changeScoreOfActivePlayer(by: +1)
             } else {
-                score -= 1
+                changeScoreOfActivePlayer(by: -1)
             }
             for i in newSelection {
                 openedCards[i].isMatched = isMatched ? .matched : .notMatched
