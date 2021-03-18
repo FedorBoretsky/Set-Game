@@ -50,7 +50,7 @@ struct ContentView: View {
 
         
                 Button {
-                    newGame()
+                    viewModel.newGame()
                 } label: {
                     Image(systemName: "restart.circle")
                 }
@@ -58,17 +58,17 @@ struct ContentView: View {
                 Spacer(minLength: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/)
 
                 Button {
-                    print("Solo play")
+                    viewModel.newSinglePlayerGame()
                 } label: {
-                    Image(systemName: "person.circle.fill")
+                    Image(systemName: viewModel.numberOfPlayers == 1 ? "person.circle.fill" : "person.circle")
                 }
                 
                 Spacer(minLength: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/)
 
                 Button {
-                    print("Two players")
+                    viewModel.newTwoPlayerGame()
                 } label: {
-                    Image(systemName: "person.2.circle")
+                    Image(systemName: viewModel.numberOfPlayers == 2 ? "person.2.circle.fill" : "person.2.circle")
                 }
                 
                 Spacer(minLength: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/)
@@ -108,31 +108,51 @@ struct ContentView: View {
 
             }
             .zIndex(1)
-            .onAppear{ newGame() }
+            .onAppear{ viewModel.newGame() }
             
             Spacer()
             
+            // Bottom bar
+            
             HStack(alignment: .top){
                 
-                // Score
-                VStack(alignment: .leading){
-                    Text("Score")
-                    Text("\(viewModel.scoreOfPlayer(0), specifier: "%g")")
-                        .font(Font.system(size: scoreFrameSize, weight: .thin))
-                    
+                // Score for solo playing
+                if viewModel.numberOfPlayers == 1 {
+                    VStack(alignment: .leading){
+                        Text("Score")
+                        Text("\(viewModel.scoreOfPlayer(0), specifier: "%g")")
+                            .font(Font.system(size: scoreFrameSize, weight: .thin))
+                        
+                    }
+                    .animation(.none)
                 }
-                .animation(.none)
-                Spacer()
+                
 
+                // Two players mode – Score and activation of 1st player.
+                if viewModel.numberOfPlayers == 2 {
+                    Button {
+                        viewModel.activatePlayer(0)
+                    } label: {
+                        VStack(alignment: .leading){
+                            Text("Player 1")
+                            Text("\(viewModel.scoreOfPlayer(0), specifier: "%g")")
+                                .font(Font.system(size: scoreFrameSize, weight: .thin))
+                        }
+                        .animation(.none)
+                    }
+                    .disabled(viewModel.activePlayerIndex != nil)
+                }
+
+                Spacer()
+                    
                 // Deck
                 Button {
                     withAnimation(.easeInOut(duration: 0.5)) {
                         viewModel.deal3MoreCards()
                     }
                 } label : {
-                    
                     VStack {
-                        Text("3 more cards")
+                        Text("+ 3 cards")
                         ZStack {
                             ForEach(viewModel.deckCards) { card in
                                 CardView(card: card, rotation: 180)
@@ -141,40 +161,54 @@ struct ContentView: View {
                             }
                         }
                         .frame(width: 66, height: 66, alignment: .center)
-                        
                     }
                 }
                 .disabled(viewModel.isDeckEmpty)
                 Spacer()
-
+                
+                // Two players mode – Score and activation of 2nd player.
+                if viewModel.numberOfPlayers == 2 {
+                    Button {
+                        viewModel.activatePlayer(1)
+                    } label: {
+                        VStack(alignment: .leading){
+                            Text("Player 2")
+                            Text("\(viewModel.scoreOfPlayer(1), specifier: "%g")")
+                                .font(Font.system(size: scoreFrameSize, weight: .thin))
+                        }
+                        .animation(.none)
+                    }
+                    .disabled(viewModel.activePlayerIndex != nil)
+                }
+                
+                
                 
                 // Cheat
-                Button {
-                    // No tap action
-                } label: {
-                    VStack {
-                        Text("Cheat")
-                        Image("cheatMode")
-                            .renderingMode(/*@START_MENU_TOKEN@*/.template/*@END_MENU_TOKEN@*/)
-                            .frame(width: 66, height: 66, alignment: .center)
-                    }
-                    .onLongPressGesture(
-                        minimumDuration: 5,
-                        maximumDistance: 0,
-                        pressing: { inProgress in
-                            //                        isCheatMode = inProgress
-                            if inProgress {
-                                viewModel.cheatModeOn()
-                            } else {
+                if viewModel.numberOfPlayers == 1 {
+                    Button {
+                        // No tap action
+                    } label: {
+                        VStack {
+                            Text("Cheat")
+                            Image("cheatMode")
+                                .renderingMode(/*@START_MENU_TOKEN@*/.template/*@END_MENU_TOKEN@*/)
+                                .frame(width: 66, height: 66, alignment: .center)
+                        }
+                        .onLongPressGesture(
+                            minimumDuration: 5,
+                            maximumDistance: 0,
+                            pressing: { inProgress in
+                                if inProgress {
+                                    viewModel.cheatModeOn()
+                                } else {
+                                    viewModel.cheatModeOff()
+                                }
+                            },
+                            perform: {
                                 viewModel.cheatModeOff()
                             }
-                        },
-                        perform: {
-                            //                        isCheatMode = false
-                            //                        cheatPrompt = nil
-                            viewModel.cheatModeOff()
-                        }
-                    )
+                        )
+                    }
                 }
 
 
@@ -191,13 +225,7 @@ struct ContentView: View {
         
     }
     
-    
-
-    func newGame() {
-            viewModel.newGame()
-    }
-    
-    
+        
     func startDealingAnimation(for card: SetGameModel.Card) {
         dealingAdjustments¨[card.id] = dealingAdjustmentForCard(card)
         withAnimation(.easeInOut(duration: 0.3)){

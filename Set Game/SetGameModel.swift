@@ -24,14 +24,14 @@ class SetGameModel: ObservableObject {
     {
         didSet {
             if cheatMode {
-                cheatModeOn()
+                cheatModeDidSetOn()
             } else {
-                cheatModeOff()
+                cheatModeDidSetOff()
             }
         }
     }
     
-    func cheatModeOn() {
+    func cheatModeDidSetOn() {
         // Penalize cheating
         // TODO: Fix moving buttons when change sign. Try add one decimal penalty 0.3 without drifting buttons.
         changeScoreOfActivePlayer(by: -1)
@@ -44,14 +44,14 @@ class SetGameModel: ObservableObject {
             openedCards[i].isCheatHighlight = highlightedSet.contains(openedCards[i])
         }
         //
-        // Stop after few seconds
-        let stopCheatTimer = Timer(timeInterval: Self.fewSeconds, repeats: false){_ in
+        // Stop cheat mode after few seconds
+        let stopCheatModeTimer = Timer(timeInterval: Self.fewSeconds, repeats: false){_ in
             self.cheatMode = false
         }
-        RunLoop.current.add(stopCheatTimer, forMode: .common)
+        RunLoop.current.add(stopCheatModeTimer, forMode: .common)
     }
 
-    func cheatModeOff() {
+    func cheatModeDidSetOff() {
         for i in openedCards.indices {
             openedCards[i].isCheatHighlight = false
         }
@@ -62,7 +62,39 @@ class SetGameModel: ObservableObject {
     @Published var numberOfPlayers: Int = 1
     
     @Published var activePlayerIndex: Int? = 0
+    private var currentPlayerModeID = UUID()
+    
+    func activatePlayer(_ playerIndex: Int) {
+        
+        // One player cannot steal move from another player
+        guard activePlayerIndex == nil else {
+            return
+        }
+        
+        print("Set \(playerIndex+1) player active.")
 
+        // Set player active
+        activePlayerIndex = playerIndex
+        
+        // Disable player after few seconds
+        currentPlayerModeID = UUID()
+        let stopPlayerTimer = Timer(timeInterval: Self.fewSeconds, repeats: false){_ in
+            self.autoDeactivatePlayerMode(withID: self.currentPlayerModeID)
+        }
+        RunLoop.current.add(stopPlayerTimer, forMode: .common)
+
+    }
+    
+    private func autoDeactivatePlayerMode(withID initialPlayeModeID: UUID) {
+        guard currentPlayerModeID == initialPlayeModeID else {
+            return
+        }
+        activePlayerIndex = nil
+    }
+
+    // MARK: - To Dos
+    
+    // TODO: Add guard protection from activePlayer == nil to all method where it needed.
     
     // MARK: - Score
     
@@ -202,9 +234,20 @@ class SetGameModel: ObservableObject {
         }
     }
     
-    func startGame() {
+    // MARK: – Game
+    
+    func startGame(numberOfPlayers: Int) {
+        // Players setup
+        self.numberOfPlayers = numberOfPlayers
+        score = Array(repeating: 0, count: self.numberOfPlayers)
+        if self.numberOfPlayers == 1 {
+            activePlayerIndex = 0
+        } else {
+            activePlayerIndex = nil
+        }
+        
+        // Cards setup
         deck = Self.fullDeck().shuffled()
-        score = Array(repeating: 0, count: numberOfPlayers)
         deal(numberOfCards: 12)
     }
     
@@ -213,12 +256,18 @@ class SetGameModel: ObservableObject {
         openedCards = []
     }
     
-    func newGame() {
+    /// Run the game with specific number of players.
+    /// - Parameter numberOfPlayers: The number of players who will play.
+    func newGame(numberOfPlayers: Int) {
         stopGame()
-        startGame()
+        startGame(numberOfPlayers: numberOfPlayers)
+    }
+    
+    /// Restart a game with the same number of players as the previous game.
+    func newGame() {
+        newGame(numberOfPlayers: self.numberOfPlayers)
     }
 
-    
     func cleanTable() {
         // TODO: Is cleanTable() ever used? What the difference between stopGame() and cleanTable()?
         openedCards = []

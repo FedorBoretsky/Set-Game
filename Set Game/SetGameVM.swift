@@ -44,16 +44,28 @@ class SetGameViewModel: ObservableObject {
     func scoreOfPlayer(_ playerIndex: Int) -> Double {
         model.score[playerIndex]
     }
-
     
+    var activePlayerIndex: Int? {
+        model.activePlayerIndex
+    }
+
     
     // MARK: - Intents
     
     func newGame() {
-//        model = SetGameModel()
-//        model.cleanTable()
-//        model.startGame()
         model.newGame()
+    }
+    
+    func newSinglePlayerGame() {
+        model.newGame(numberOfPlayers: 1)
+    }
+    
+    func newTwoPlayerGame() {
+        model.newGame(numberOfPlayers: 2)
+    }
+    
+    func activatePlayer(_ playerIndex: Int) {
+        model.activatePlayer(playerIndex)
     }
     
     func deal3MoreCards() {
