@@ -137,34 +137,37 @@ struct ContentView: View {
                             Text("Player 1")
                             Text("\(viewModel.scoreOfPlayer(0), specifier: "%g")")
                                 .font(Font.system(size: scoreFrameSize, weight: .thin))
+                                .foregroundColor(.primary)
                         }
                         .animation(.none)
                     }
-                    .disabled(viewModel.activePlayerIndex != nil)
+                    .disabled(viewModel.isThereActivePlayer)
                 }
 
                 Spacer()
                     
                 // Deck
-                Button {
-                    withAnimation(.easeInOut(duration: 0.5)) {
-                        viewModel.deal3MoreCards()
-                    }
-                } label : {
-                    VStack {
-                        Text("+ 3 cards")
-                        ZStack {
-                            ForEach(viewModel.deckCards) { card in
-                                CardView(card: card, rotation: 180)
-                                    .frame(height: 44)
-                                    .background(MyPreferenceViewSetter(id: "deck"))
-                            }
+                if viewModel.isThereActivePlayer {
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.5)) {
+                            viewModel.deal3Cards()
                         }
-                        .frame(width: 66, height: 66, alignment: .center)
+                    } label : {
+                        VStack {
+                            Text("+ 3 cards")
+                            ZStack {
+                                ForEach(viewModel.deckCards) { card in
+                                    CardView(card: card, rotation: 180)
+                                        .frame(height: 44)
+                                        .background(MyPreferenceViewSetter(id: "deck"))
+                                }
+                            }
+                            .frame(width: 66, height: 66, alignment: .center)
+                        }
                     }
+                    .disabled(viewModel.isDeckEmpty)
+                    Spacer()
                 }
-                .disabled(viewModel.isDeckEmpty)
-                Spacer()
                 
                 // Two players mode – Score and activation of 2nd player.
                 if viewModel.numberOfPlayers == 2 {
@@ -175,10 +178,11 @@ struct ContentView: View {
                             Text("Player 2")
                             Text("\(viewModel.scoreOfPlayer(1), specifier: "%g")")
                                 .font(Font.system(size: scoreFrameSize, weight: .thin))
+                                .foregroundColor(.primary)
                         }
                         .animation(.none)
                     }
-                    .disabled(viewModel.activePlayerIndex != nil)
+                    .disabled(viewModel.isThereActivePlayer)
                 }
                 
                 

@@ -46,7 +46,11 @@ class SetGameViewModel: ObservableObject {
     }
     
     var activePlayerIndex: Int? {
-        model.activePlayerIndex
+        model.activePlayer
+    }
+    
+    var isThereActivePlayer: Bool {
+        model.isThereActivePlayer
     }
 
     
@@ -68,8 +72,8 @@ class SetGameViewModel: ObservableObject {
         model.activatePlayer(playerIndex)
     }
     
-    func deal3MoreCards() {
-        model.deal3MoreCards()
+    func deal3Cards() {
+        model.deal3Cards()
     }
     
     func choose(card: SetGameModel.Card) {

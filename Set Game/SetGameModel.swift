@@ -15,7 +15,8 @@ class SetGameModel: ObservableObject {
     var flewAwayCards: [Card] = []
     
     static private let fewSeconds: Double = 4
-    
+    static private let inactivityPenalty: Double = -1
+
     
     // MARK: - Cheat Mode
     //
@@ -61,53 +62,73 @@ class SetGameModel: ObservableObject {
     
     @Published var numberOfPlayers: Int = 1
     
-    @Published var activePlayerIndex: Int? = 0
-    private var currentPlayerModeID = UUID()
+    @Published var activePlayer: Int? = 0
+    var isThereActivePlayer: Bool { activePlayer != nil }
+    
+    private var currentMove: UUID?
+    
     
     func activatePlayer(_ playerIndex: Int) {
         
-        // One player cannot steal move from another player
-        guard activePlayerIndex == nil else {
+        // Player can't steal move from another player
+        guard !isThereActivePlayer else {
             return
         }
         
-        print("Set \(playerIndex+1) player active.")
-
         // Set player active
-        activePlayerIndex = playerIndex
+        activePlayer = playerIndex
         
-        // Disable player after few seconds
-        currentPlayerModeID = UUID()
+        // Start new move
+        currentMove = UUID()
+        print("Activate player \(activePlayer!+1) with move \(currentMove!)")
+        
+        // Penalize the player after a few seconds if player does not make a move.
         let stopPlayerTimer = Timer(timeInterval: Self.fewSeconds, repeats: false){_ in
-            self.autoDeactivatePlayerMode(withID: self.currentPlayerModeID)
+            self.penalizeInactivity(duringMove: self.currentMove)
         }
         RunLoop.current.add(stopPlayerTimer, forMode: .common)
 
     }
     
-    private func autoDeactivatePlayerMode(withID initialPlayeModeID: UUID) {
-        guard currentPlayerModeID == initialPlayeModeID else {
-            return
+    private func penalizeInactivity(duringMove moveWhenTimerStarted: UUID?) {
+        if isThereActivePlayer && currentMove == moveWhenTimerStarted {
+            changeScoreOfActivePlayer(by: Self.inactivityPenalty)
+            finishMove()
         }
-        activePlayerIndex = nil
     }
+    
 
     // MARK: - To Dos
     
     // TODO: Add guard protection from activePlayer == nil to all method where it needed.
+    
     
     // MARK: - Score
     
     @Published private(set) var score: [Double] = [0]
     
     func changeScoreOfActivePlayer(by addition: Double) {
-        guard let index = activePlayerIndex else {
-            assertionFailure("\(#function) failed, activePlayerIndex == nil")
-            return
+        if let playerIndex = activePlayer {
+            score[playerIndex] += addition
         }
-        score[index] += addition
     }
     
+    func finishMove() {
+        if numberOfPlayers > 1 {
+            // In multiplayer mode
+            activePlayer = nil
+            currentMove = nil
+            // Treat selection
+            if isSet(selectedIndices) {
+                removeFoundedSet(selectedIndices)
+            } else {
+                for index in selectedIndices {
+                    openedCards[index].isSelected = false
+                    openedCards[index].isMatched = .inapplicable
+                }
+            }
+        }
+    }
     
     var isThereNoSetInOpenedCards: Bool {
         return findSetsInOpenedCards().isEmpty
@@ -204,8 +225,10 @@ class SetGameModel: ObservableObject {
     
     func dealWithReplacing(indices: [Int]) {
         // TODO: Too complicated. Imply that deleting of cards already done outside this function.
+        flyAway(indices)
         for index in indices.sorted(by: {$0 < $1}) {
             if let card = deck.popLast() {
+                print (card)
                 openedCards.insert(card, at: index)
             }
         }
@@ -213,14 +236,16 @@ class SetGameModel: ObservableObject {
     
     
     
-    func deal3MoreCards() {
+    func deal3Cards() {
         let selection = selectedIndices
         if isSet(selection) {
-            flyAway(selection)
+            // Replace selected Set
             dealWithReplacing(indices: selection)
         } else {
+            // Add 3 more card
             if !findSetsInOpenedCards().isEmpty {
                 changeScoreOfActivePlayer(by: -1)
+                finishMove()
             }
             deal(numberOfCards: 3)
         }
@@ -241,9 +266,11 @@ class SetGameModel: ObservableObject {
         self.numberOfPlayers = numberOfPlayers
         score = Array(repeating: 0, count: self.numberOfPlayers)
         if self.numberOfPlayers == 1 {
-            activePlayerIndex = 0
+            activePlayer = 0
+            currentMove = UUID()
         } else {
-            activePlayerIndex = nil
+            activePlayer = nil
+            currentMove = nil
         }
         
         // Cards setup
@@ -273,8 +300,23 @@ class SetGameModel: ObservableObject {
         openedCards = []
     }
     
+    fileprivate func removeFoundedSet(_ previousSelection: [Int]) {
+        if openedCards.count == 12 {
+            dealWithReplacing(indices: previousSelection)
+        } else {
+            flyAway(previousSelection)
+        }
+    }
+    
     func choose(card: Card) {
-        guard let choosenIndex = openedCards.firstIndex(matching: card) else {
+        
+        // Don't choose without activated player
+        guard isThereActivePlayer else {
+            return
+        }
+        
+        // TODO: What this guard do? Is it real situation when Card not in openedCards
+        guard let choosenCardIndex = openedCards.firstIndex(matching: card) else {
             return
         }
         
@@ -285,23 +327,21 @@ class SetGameModel: ObservableObject {
         let previousSelection = selectedIndices
         
         if previousSelection.count < 3 {
-            openedCards[choosenIndex].isSelected.toggle()
+            openedCards[choosenCardIndex].isSelected.toggle()
         } else {
             // 3 cards was selected
             if isSet(previousSelection) {
-                if !previousSelection.contains(choosenIndex) {
-                    openedCards[choosenIndex].isSelected = true
+                // Select card if it outside Set
+                if !previousSelection.contains(choosenCardIndex) {
+                    openedCards[choosenCardIndex].isSelected = true
                 }
-                flyAway(previousSelection)  // TODO: put flyAway action inside dealWithReplacing()
-                if openedCards.count < 12 {
-                    dealWithReplacing(indices: previousSelection)
-                }
+                removeFoundedSet(previousSelection)
             } else {
                 for index in previousSelection {
                     openedCards[index].isSelected = false
                     openedCards[index].isMatched = .inapplicable
-                    openedCards[choosenIndex].isSelected = true
                 }
+                openedCards[choosenCardIndex].isSelected = true
             }
         }
         
@@ -313,14 +353,12 @@ class SetGameModel: ObservableObject {
         
         if newSelection.count == 3 {
             let isMatched = isSet(newSelection)
-            if isMatched {
-                changeScoreOfActivePlayer(by: +1)
-            } else {
-                changeScoreOfActivePlayer(by: -1)
-            }
             for i in newSelection {
                 openedCards[i].isMatched = isMatched ? .matched : .notMatched
             }
+            changeScoreOfActivePlayer(by: isMatched ? +1 : -1)
+            // TODO: In multiplayer mode hide founded Set without waiting next move but show matched/notMatched animation
+            finishMove()
         }
         
     }
