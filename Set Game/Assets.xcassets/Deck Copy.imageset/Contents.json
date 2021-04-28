@@ -1,17 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "cheatMode.png",
+      "filename" : "Deck Copy.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "cheatMode@2x.png",
+      "filename" : "Deck Copy@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "cheatMode@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

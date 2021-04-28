@@ -10,21 +10,13 @@ import SwiftUI
 
 
 func colorForFeatureValue(_ cardFeature: SetGameModel.Card.ColorFeature) -> Color {
-//    switch cardFeature {
-//    case .red:
-//        return Color(#colorLiteral(red: 1, green: 0, blue: 0.1025861391, alpha: 1))
-//    case .green:
-//        return Color(#colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1))
-//    case .purple:
-//        return Color(#colorLiteral(red: 0.4906382445, green: 0, blue: 1, alpha: 1))
-//    }
     switch cardFeature {
     case .red:
-        return Color(#colorLiteral(red: 0.9449447989, green: 0.5995458961, blue: 0.4950096011, alpha: 1))
+        return UX.cardShapeRedColor
     case .green:
-        return Color(#colorLiteral(red: 1, green: 0.8101983339, blue: 0.4036157531, alpha: 1))
+        return UX.cardShapeGreenColor
     case .purple:
-        return Color(#colorLiteral(red: 0.5390414985, green: 0.8129923543, blue: 0.8687104583, alpha: 1))
+        return UX.cardShapePurpleColor
     }
 }
 
@@ -137,7 +129,10 @@ struct FaceSymbol: InsettableShape {
                 height: rect.height
             )
         }
-        let marginsScaleFactor: CGFloat = 0.75
+        let marginsScaleFactor: CGFloat = 0.7
+        // 0.77 looks like phisical game
+        // 0.6 looks accurate (but may be small)
+        // 0.7 average
         symbolRect = symbolRect.applying(CGAffineTransform(scaleX: marginsScaleFactor, y: marginsScaleFactor))
         symbolRect = symbolRect.offsetBy(dx: rect.midX - symbolRect.midX, dy: rect.midY - symbolRect.midY)
         

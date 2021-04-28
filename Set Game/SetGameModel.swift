@@ -239,14 +239,21 @@ class SetGameModel: ObservableObject {
     func deal3Cards() {
         let selection = selectedIndices
         if isSet(selection) {
+            //
             // Replace selected Set
+            
             dealWithReplacing(indices: selection)
         } else {
+            //
             // Add 3 more card
+            
+            // Penalize unnecessary dealing
             if !findSetsInOpenedCards().isEmpty {
                 changeScoreOfActivePlayer(by: -1)
                 finishMove()
             }
+            
+            // Add 3 cards
             deal(numberOfCards: 3)
         }
     }
@@ -373,33 +380,41 @@ class SetGameModel: ObservableObject {
         var id: String {
             get {
                 [
-                    String (number.rawValue),
-                    String(color.rawValue),
-                    String(shading.rawValue),
-                    String(shape.rawValue)
+                    String(number.description),
+                    String(color.description),
+                    String(shading.description),
+                    String(shape.description)
                 ].joined(separator: "_")
             }
         }
                 
-        enum ColorFeature: String, CaseIterable {
+        enum ColorFeature: String, CaseIterable, CustomStringConvertible {
             case red
             case green
             case purple
+            //
+            var description: String { self.rawValue }
         }
-        enum NumberFeature: Int, CaseIterable {
+        enum NumberFeature: Int, CaseIterable, CustomStringConvertible {
             case one = 1
             case two = 2
             case three = 3
+            //
+            var description: String { String(self.rawValue) }
         }
-        enum ShapeFeature: String, CaseIterable {
+        enum ShapeFeature: String, CaseIterable, CustomStringConvertible {
             case diamond
             case squiggle
             case oval
+            //
+            var description: String { self.rawValue }
         }
-        enum ShadingFeature: String, CaseIterable {
+        enum ShadingFeature: String, CaseIterable, CustomStringConvertible {
             case solid
             case striped
             case open
+            //
+            var description: String { self.rawValue }
         }
         
         
@@ -420,7 +435,7 @@ class SetGameModel: ObservableObject {
 }
 
 #if DEBUG
-let testData = [
+let testCardArray = [
     SetGameModel.Card(color: .green, number: .one, shape: .diamond, shading: .striped),
 
     SetGameModel.Card(color: .red, number: .one, shape: .diamond, shading: .striped),
@@ -438,5 +453,96 @@ let testData = [
     SetGameModel.Card(color: .purple, number: .one, shape: .oval, shading: .striped),
     SetGameModel.Card(color: .green, number: .two, shape: .diamond, shading: .solid),
     SetGameModel.Card(color: .red, number: .three, shape: .squiggle, shading: .open),
+    
+    ///
+    ///
+    ///
+    
+    SetGameModel.Card(color: .green, number: .one, shape: .diamond, shading: .striped),
+
+    SetGameModel.Card(color: .red, number: .one, shape: .diamond, shading: .striped),
+    SetGameModel.Card(color: .red, number: .two, shape: .diamond, shading: .solid),
+    SetGameModel.Card(color: .red, number: .three, shape: .diamond, shading: .open),
+    
+    SetGameModel.Card(color: .red, number: .two, shape: .oval, shading: .open),
+    SetGameModel.Card(color: .red, number: .two, shape: .oval, shading: .striped),
+    SetGameModel.Card(color: .red, number: .two, shape: .oval, shading: .solid),
+    
+    SetGameModel.Card(color: .green, number: .one, shape: .squiggle, shading: .striped),
+    SetGameModel.Card(color: .purple, number: .two, shape: .oval, shading: .striped),
+    SetGameModel.Card(color: .red, number: .three, shape: .diamond, shading: .striped),
+    
+    SetGameModel.Card(color: .purple, number: .one, shape: .oval, shading: .striped),
+    SetGameModel.Card(color: .green, number: .two, shape: .diamond, shading: .solid),
+    SetGameModel.Card(color: .red, number: .three, shape: .squiggle, shading: .open),
+    SetGameModel.Card(color: .green, number: .one, shape: .diamond, shading: .striped),
+
+    SetGameModel.Card(color: .red, number: .one, shape: .diamond, shading: .striped),
+    SetGameModel.Card(color: .red, number: .two, shape: .diamond, shading: .solid),
+    SetGameModel.Card(color: .red, number: .three, shape: .diamond, shading: .open),
+    
+    SetGameModel.Card(color: .red, number: .two, shape: .oval, shading: .open),
+    SetGameModel.Card(color: .red, number: .two, shape: .oval, shading: .striped),
+    SetGameModel.Card(color: .red, number: .two, shape: .oval, shading: .solid),
+    
+    SetGameModel.Card(color: .green, number: .one, shape: .squiggle, shading: .striped),
+    SetGameModel.Card(color: .purple, number: .two, shape: .oval, shading: .striped),
+    SetGameModel.Card(color: .red, number: .three, shape: .diamond, shading: .striped),
+    
+    SetGameModel.Card(color: .purple, number: .one, shape: .oval, shading: .striped),
+    SetGameModel.Card(color: .green, number: .two, shape: .diamond, shading: .solid),
+    SetGameModel.Card(color: .red, number: .three, shape: .squiggle, shading: .open),
+    SetGameModel.Card(color: .green, number: .one, shape: .diamond, shading: .striped),
+
+    SetGameModel.Card(color: .red, number: .one, shape: .diamond, shading: .striped),
+    SetGameModel.Card(color: .red, number: .two, shape: .diamond, shading: .solid),
+    SetGameModel.Card(color: .red, number: .three, shape: .diamond, shading: .open),
+    
+    SetGameModel.Card(color: .red, number: .two, shape: .oval, shading: .open),
+    SetGameModel.Card(color: .red, number: .two, shape: .oval, shading: .striped),
+    SetGameModel.Card(color: .red, number: .two, shape: .oval, shading: .solid),
+    
+    SetGameModel.Card(color: .green, number: .one, shape: .squiggle, shading: .striped),
+    SetGameModel.Card(color: .purple, number: .two, shape: .oval, shading: .striped),
+    SetGameModel.Card(color: .red, number: .three, shape: .diamond, shading: .striped),
+    
+    SetGameModel.Card(color: .purple, number: .one, shape: .oval, shading: .striped),
+    SetGameModel.Card(color: .green, number: .two, shape: .diamond, shading: .solid),
+    SetGameModel.Card(color: .red, number: .three, shape: .squiggle, shading: .open),
+    SetGameModel.Card(color: .green, number: .one, shape: .diamond, shading: .striped),
+
+    SetGameModel.Card(color: .red, number: .one, shape: .diamond, shading: .striped),
+    SetGameModel.Card(color: .red, number: .two, shape: .diamond, shading: .solid),
+    SetGameModel.Card(color: .red, number: .three, shape: .diamond, shading: .open),
+    
+    SetGameModel.Card(color: .red, number: .two, shape: .oval, shading: .open),
+    SetGameModel.Card(color: .red, number: .two, shape: .oval, shading: .striped),
+    SetGameModel.Card(color: .red, number: .two, shape: .oval, shading: .solid),
+    
+    SetGameModel.Card(color: .green, number: .one, shape: .squiggle, shading: .striped),
+    SetGameModel.Card(color: .purple, number: .two, shape: .oval, shading: .striped),
+    SetGameModel.Card(color: .red, number: .three, shape: .diamond, shading: .striped),
+    
+    SetGameModel.Card(color: .purple, number: .one, shape: .oval, shading: .striped),
+    SetGameModel.Card(color: .green, number: .two, shape: .diamond, shading: .solid),
+    SetGameModel.Card(color: .red, number: .three, shape: .squiggle, shading: .open),
+    SetGameModel.Card(color: .green, number: .one, shape: .diamond, shading: .striped),
+
+    SetGameModel.Card(color: .red, number: .one, shape: .diamond, shading: .striped),
+    SetGameModel.Card(color: .red, number: .two, shape: .diamond, shading: .solid),
+    SetGameModel.Card(color: .red, number: .three, shape: .diamond, shading: .open),
+    
+    SetGameModel.Card(color: .red, number: .two, shape: .oval, shading: .open),
+    SetGameModel.Card(color: .red, number: .two, shape: .oval, shading: .striped),
+    SetGameModel.Card(color: .red, number: .two, shape: .oval, shading: .solid),
+    
+    SetGameModel.Card(color: .green, number: .one, shape: .squiggle, shading: .striped),
+    SetGameModel.Card(color: .purple, number: .two, shape: .oval, shading: .striped),
+    SetGameModel.Card(color: .red, number: .three, shape: .diamond, shading: .striped),
+    
+    SetGameModel.Card(color: .purple, number: .one, shape: .oval, shading: .striped),
+    SetGameModel.Card(color: .green, number: .two, shape: .diamond, shading: .solid),
+    SetGameModel.Card(color: .red, number: .three, shape: .squiggle, shading: .open),
+
 ]
 #endif
