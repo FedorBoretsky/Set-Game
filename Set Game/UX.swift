@@ -25,7 +25,8 @@ struct UX {
     static let circularProgressBarColor = highlightColor
     static let menuNormalColor = infoColor
     static let menuHighlightColor = highlightColor
-    
+    static let gameOverBackgroundColor = Color(#colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1))
+
     // Size
     static let bigRoundButtonSize: CGFloat = 67
     static let circularProgressBarLineWidth: CGFloat = 4

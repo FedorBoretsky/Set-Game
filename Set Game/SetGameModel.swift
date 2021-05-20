@@ -14,17 +14,125 @@ class SetGameModel: ObservableObject {
     @Published var openedCards: [Card] = []
     var flewAwayCards: [Card] = []
     
-    static private let fewSeconds: Double = 4
+    let durationOfCheatModeInSeconds: Double = 3
+    let durationOfPlayerMoveInSeconds: Double = 4
     static private let inactivityPenalty: Double = -1
+
+    // MARK: - Initiation
+    //
+    //
+    static func fullDeck() -> [Card] {
+        var deck = [Card]()
+        for color in Card.ColorFeature.allCases {
+            for number in Card.NumberFeature.allCases {
+                for shape in Card.ShapeFeature.allCases {
+                    for shading in Card.ShadingFeature.allCases {
+                        deck.append(
+                            Card(color: color,
+                                 number: number,
+                                 shape: shape,
+                                 shading: shading)
+                        )
+                    }
+                }
+            }
+        }
+        return deck
+    }
+    
+    
+    // MARK: - Checking
+    //
+    //
+    
+    static func isSet (_ Card1: Card, _ Card2: Card, _ Card3: Card) -> Bool {
+        
+        func isFeatureMakeUpSet<Feature> (_ First: Feature, _ Second: Feature, _ Third: Feature) -> Bool
+        where Feature: Equatable {
+            
+            func allTheSame (_ First: Feature, _ Second: Feature, _ Third: Feature) -> Bool {
+                return (First == Second) && (Second == Third)
+            }
+            
+            func allDifferent (_ First: Feature, _ Second: Feature, _ Third: Feature) -> Bool {
+                return (First != Second) && (Second != Third) && (Third != First)
+            }
+            
+            return allTheSame(First, Second, Third) || allDifferent(First, Second, Third)
+        }
+        
+        return isFeatureMakeUpSet(Card1.color,   Card2.color,   Card3.color) &&
+               isFeatureMakeUpSet(Card1.number,  Card2.number,  Card3.number) &&
+               isFeatureMakeUpSet(Card1.shape,   Card2.shape,   Card3.shape) &&
+               isFeatureMakeUpSet(Card1.shading, Card2.shading, Card3.shading)
+    }
+    
+    
+    private func isSet(_ indices: [Int]) -> Bool {
+        if indices.count == 3 {
+            return Self.isSet(openedCards[indices[0]], openedCards[indices[1]], openedCards[indices[2]])
+        } else {
+            return false
+        }
+    }
+    
+    
+    /// Search and return all Sets in "face up" cards.
+    /// - Returns: *[[ Card1, Card2, Card3], [Card4, Card5, Card6], …]* Two-dimesional array. Top level array consists of founded Sets. Each  Set is represented as array of three Cards.
+    private func findSetsInOpenedCards() -> [[Card]] {
+        var sets¨: [[Card]] = []
+        for i1 in 0 ..< openedCards.count {
+            for i2 in (i1 + 1) ..< openedCards.count {
+                for i3 in (i2 + 1) ..< openedCards.count {
+                    if Self.isSet(openedCards[i1], openedCards[i2], openedCards[i3]) {
+                        sets¨.append([openedCards[i1], openedCards[i2], openedCards[i3]])
+                    }
+                }
+            }
+        }
+        return sets¨
+    }
+    
+    
+    
+    var isDeckEmpty: Bool {
+        deck.isEmpty
+    }
+
+
+    var isGameOver = false
+        
+    private func updatePropertyIsGameOver() {
+        // If there are some face-down cards we continue to play.
+        if !isDeckEmpty {
+            isGameOver = false
+            return
+        }
+        
+        // There are no face-down cards.
+        // Check all Sets on the table
+        for set in findSetsInOpenedCards() {
+            for card in set {
+                if card.isMatched != .matched {
+                    // There is nonmatched Set on the table, so continue to play.
+                    isGameOver = false
+                    return
+                }
+            }
+        }
+        // There are no Sets on the table or all card in the Sets already matched: game over.
+        isGameOver = true
+        
+    }
 
     
     // MARK: - Cheat Mode
     //
     //
-    var cheatMode: Bool = false
+    var isCheatMode: Bool = false
     {
         didSet {
-            if cheatMode {
+            if isCheatMode {
                 cheatModeDidSetOn()
             } else {
                 cheatModeDidSetOff()
@@ -46,8 +154,8 @@ class SetGameModel: ObservableObject {
         }
         //
         // Stop cheat mode after few seconds
-        let stopCheatModeTimer = Timer(timeInterval: Self.fewSeconds, repeats: false){_ in
-            self.cheatMode = false
+        let stopCheatModeTimer = Timer(timeInterval: self.durationOfCheatModeInSeconds, repeats: false){_ in
+            self.isCheatMode = false
         }
         RunLoop.current.add(stopCheatModeTimer, forMode: .common)
     }
@@ -83,7 +191,7 @@ class SetGameModel: ObservableObject {
         print("Activate player \(activePlayer!+1) with move \(currentMove!)")
         
         // Penalize the player after a few seconds if player does not make a move.
-        let stopPlayerTimer = Timer(timeInterval: Self.fewSeconds, repeats: false){_ in
+        let stopPlayerTimer = Timer(timeInterval: self.durationOfPlayerMoveInSeconds, repeats: false){_ in
             self.penalizeInactivity(duringMove: self.currentMove)
         }
         RunLoop.current.add(stopPlayerTimer, forMode: .common)
@@ -130,100 +238,30 @@ class SetGameModel: ObservableObject {
         }
     }
     
-    var isThereNoSetInOpenedCards: Bool {
-        return findSetsInOpenedCards().isEmpty
-    }
     
     
     var selectedIndices: [Int] {
         openedCards.indices.filter{ openedCards[$0].isSelected }
     }
-
-    var isDeckEmpty: Bool {
-        get { deck.isEmpty }
-    }
     
     
-    static func fullDeck() -> [Card] {
-        var deck = [Card]()
-        for color in Card.ColorFeature.allCases {
-            for number in Card.NumberFeature.allCases {
-                for shape in Card.ShapeFeature.allCases {
-                    for shading in Card.ShadingFeature.allCases {
-                        deck.append(
-                            Card(color: color,
-                                 number: number,
-                                 shape: shape,
-                                 shading: shading)
-                        )
-                    }
-                }
-            }
-        }
-        return deck
-    }
-    
-    static func isSet (_ Card1: Card, _ Card2: Card, _ Card3: Card) -> Bool {
-        
-        func isFeatureMakeUpSet<Feature> (_ First: Feature, _ Second: Feature, _ Third: Feature) -> Bool
-        where Feature: Equatable {
-            
-            func allTheSame (_ First: Feature, _ Second: Feature, _ Third: Feature) -> Bool {
-                return (First == Second) && (Second == Third)
-            }
-            
-            func allDifferent (_ First: Feature, _ Second: Feature, _ Third: Feature) -> Bool {
-                return (First != Second) && (Second != Third) && (Third != First)
-            }
-            
-            return allTheSame(First, Second, Third) || allDifferent(First, Second, Third)
-        }
-        
-        return isFeatureMakeUpSet(Card1.color,   Card2.color,   Card3.color) &&
-               isFeatureMakeUpSet(Card1.number,  Card2.number,  Card3.number) &&
-               isFeatureMakeUpSet(Card1.shape,   Card2.shape,   Card3.shape) &&
-               isFeatureMakeUpSet(Card1.shading, Card2.shading, Card3.shading)
-    }
-    
-//    private func isSet(_ i1: Int, _ i2: Int, _ i3: Int) -> Bool {
-//        return Self.isSet(openedCards[i1], openedCards[i2], openedCards[i3])
-//    }
-    
-    private func isSet(_ indices: [Int]) -> Bool {
-        if indices.count == 3 {
-            return Self.isSet(openedCards[indices[0]], openedCards[indices[1]], openedCards[indices[2]])
-        } else {
-            return false
-        }
-    }
     
     
-    private func findSetsInOpenedCards() -> [[Card]] {
-        var sets¨: [[Card]] = []
-        for i1 in 0 ..< openedCards.count {
-            for i2 in (i1 + 1) ..< openedCards.count {
-                for i3 in (i2 + 1) ..< openedCards.count {
-                    if Self.isSet(openedCards[i1], openedCards[i2], openedCards[i3]) {
-                        sets¨.append([openedCards[i1], openedCards[i2], openedCards[i3]])
-                    }
-                }
-            }
-        }
-        return sets¨
-    }
+    
         
     // MARK: - Deal
     
-    func deal(numberOfCards: Int) {
+    private func deal(numberOfCards: Int) {
         openedCards += deck.suffix(numberOfCards)
         if numberOfCards <= deck.count {
             deck.removeLast(numberOfCards)
         } else {
             deck.removeAll()
         }
+        updatePropertyIsGameOver()
     }
     
-    func dealWithReplacing(indices: [Int]) {
+    private func dealWithReplacing(indices: [Int]) {
         // TODO: Too complicated. Imply that deleting of cards already done outside this function.
         flyAway(indices)
         for index in indices.sorted(by: {$0 < $1}) {
@@ -232,11 +270,12 @@ class SetGameModel: ObservableObject {
                 openedCards.insert(card, at: index)
             }
         }
+        updatePropertyIsGameOver()
     }
     
     
     
-    func deal3Cards() {
+    func intentOfPlayerDeals3Cards() {
         let selection = selectedIndices
         if isSet(selection) {
             //
@@ -266,10 +305,13 @@ class SetGameModel: ObservableObject {
         }
     }
     
-    // MARK: – Game
+    // MARK: - Game
     
     func startGame(numberOfPlayers: Int) {
-        // Players setup
+        
+        isGameOver = false
+        
+        // Players and score setup
         self.numberOfPlayers = numberOfPlayers
         score = Array(repeating: 0, count: self.numberOfPlayers)
         if self.numberOfPlayers == 1 {
@@ -281,8 +323,31 @@ class SetGameModel: ObservableObject {
         }
         
         // Cards setup
-        deck = Self.fullDeck().shuffled()
+        deck = Self.fullDeck().shuffled() // TODO: Uncomment after finisn logic of showing GameOver
         deal(numberOfCards: 12)
+        
+        
+//        // TODO: Remove after finisn logic of showing GameOver
+//        deck = [
+//            // 1st row
+//            Card(color: .red, number: .one, shape: .oval, shading: .solid),
+//            Card(color: .red, number: .two, shape: .diamond, shading: .striped),
+//            Card(color: .green, number: .two, shape: .squiggle, shading: .open),
+//            // 2nd row
+//            Card(color: .green, number: .one, shape: .diamond, shading: .solid),
+//            Card(color: .red, number: .three, shape: .squiggle, shading: .striped),
+//            Card(color: .purple, number: .three, shape: .diamond, shading: .solid),
+//            //3rd row
+//            Card(color: .purple, number: .three, shape: .oval, shading: .solid),
+//            Card(color: .purple, number: .two, shape: .diamond, shading: .solid),
+//            Card(color: .purple, number: .one, shape: .oval, shading: .striped)
+//        ]
+//        deal(numberOfCards: 6)
+
+        // TODO: Remove after finish GameOverView
+        //
+        //
+//        deck = Array(deck[1...3])
     }
     
     func stopGame() {
@@ -368,6 +433,8 @@ class SetGameModel: ObservableObject {
             finishMove()
         }
         
+        updatePropertyIsGameOver()
+        
     }
 
 
@@ -420,7 +487,7 @@ class SetGameModel: ObservableObject {
         
         var isSelected: Bool = false
         
-        var isMatched: MatchingStatus = .inapplicable
+        var isMatched: MatchingStatus = .inapplicable  // TODO: Rename variable. Name "isMatched" give incorrect sense of type. This variable is not Bool.
         enum MatchingStatus {
             case inapplicable
             case matched

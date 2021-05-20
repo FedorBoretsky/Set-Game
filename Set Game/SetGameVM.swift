@@ -34,7 +34,7 @@ class SetGameViewModel: ObservableObject {
     }
     
     var isCheatMode: Bool {
-        model.cheatMode
+        model.isCheatMode
     }
     
     var numberOfPlayers: Int {
@@ -52,7 +52,22 @@ class SetGameViewModel: ObservableObject {
     var isThereActivePlayer: Bool {
         model.isThereActivePlayer
     }
+    
+    var durationOfCheatModeInSeconds: Double {
+        model.durationOfCheatModeInSeconds
+    }
+    
+    var durationOfPlayerMoveInSeconds: Double {
+        model.durationOfPlayerMoveInSeconds
+    }
 
+    
+    // MARK: - Checking
+    
+    var isGameOver: Bool {
+        model.isGameOver
+    }
+    
     
     // MARK: - Intents
     
@@ -73,7 +88,7 @@ class SetGameViewModel: ObservableObject {
     }
     
     func deal3Cards() {
-        model.deal3Cards()
+        model.intentOfPlayerDeals3Cards()
     }
     
     func choose(card: SetGameModel.Card) {
@@ -81,10 +96,10 @@ class SetGameViewModel: ObservableObject {
     }
     
     func cheatModeOn() {
-        return model.cheatMode = true
+        return model.isCheatMode = true
     }
 
     func cheatModeOff() {
-        return model.cheatMode = false
+        return model.isCheatMode = false
     }
 }
