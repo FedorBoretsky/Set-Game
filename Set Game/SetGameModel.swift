@@ -325,29 +325,6 @@ class SetGameModel: ObservableObject {
         // Cards setup
         deck = Self.fullDeck().shuffled() // TODO: Uncomment after finisn logic of showing GameOver
         deal(numberOfCards: 12)
-        
-        
-//        // TODO: Remove after finisn logic of showing GameOver
-//        deck = [
-//            // 1st row
-//            Card(color: .red, number: .one, shape: .oval, shading: .solid),
-//            Card(color: .red, number: .two, shape: .diamond, shading: .striped),
-//            Card(color: .green, number: .two, shape: .squiggle, shading: .open),
-//            // 2nd row
-//            Card(color: .green, number: .one, shape: .diamond, shading: .solid),
-//            Card(color: .red, number: .three, shape: .squiggle, shading: .striped),
-//            Card(color: .purple, number: .three, shape: .diamond, shading: .solid),
-//            //3rd row
-//            Card(color: .purple, number: .three, shape: .oval, shading: .solid),
-//            Card(color: .purple, number: .two, shape: .diamond, shading: .solid),
-//            Card(color: .purple, number: .one, shape: .oval, shading: .striped)
-//        ]
-//        deal(numberOfCards: 6)
-
-        // TODO: Remove after finish GameOverView
-        //
-        //
-//        deck = Array(deck[1...3])
     }
     
     func stopGame() {

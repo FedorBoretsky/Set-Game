@@ -35,12 +35,14 @@ struct CardView: View {
                     // Card area
                     RoundedRectangle(cornerRadius: geometry.size.height * cornerRadiusFactor)
                         .foregroundColor(bgFromMatching(card.isMatched))
+                        .animation(nil)
                     // Highlight for selected card
                     if card.isSelected {
                         RoundedRectangle(cornerRadius: geometry.size.height * cornerRadiusFactor + 2)
                             .stroke(Color.yellow, lineWidth: 3)
                             .offset(CGSize(width: -3, height: -3))
                             .frame(width: geometry.size.width+6, height: geometry.size.height+6)
+                            .transition(.identity)
                     }
                     // Face Image
                     CardFace(card: card)
@@ -59,11 +61,6 @@ struct CardView: View {
                 }
                 .opacity(isFaceUp ? 0 : 1)
                 
-                // Border for using as an illustration inside the rules
-//                if isInsideRules ?? false {
-//                    RoundedRectangle(cornerRadius: geometry.size.height * cornerRadiusFactor)
-//                        .stroke(lineWidth: 0.33)
-//                }
             }
         }
         .rotation3DEffect(Angle.degrees(rotation), axis: (-0.5, 0.5, 0))
