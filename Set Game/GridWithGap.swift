@@ -26,6 +26,7 @@ struct GridWithGap<Item, ItemView>: View where Item: Identifiable, ItemView: Vie
         GeometryReader { geometry in
                 body(for: ExactAspectTopToBottom(itemCount: self.items¨.count, desiredItemAspectRatio: aspectRatio, areaSize: geometry.size, gap: gap))
         }
+        .animation(.default)
     }
     
     private func body(for layout: GridLayoutWithGap) -> some View {

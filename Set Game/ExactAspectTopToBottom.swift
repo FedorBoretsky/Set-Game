@@ -65,14 +65,6 @@ struct ExactAspectTopToBottom: GridLayoutWithGap {
     
     var itemSize: CGSize {
         return itemSizeFor(rows: rowCount, columns: columnCount)
-//        if rowCount == 0 || columnCount == 0 {
-//            return CGSize.zero
-//        } else {
-//            return CGSize(
-//                width: areaSize.width / CGFloat(columnCount),
-//                height: areaSize.height / CGFloat(rowCount)
-//            )
-//        }
     }
     
     func location(ofItemAt index: Int) -> CGPoint {

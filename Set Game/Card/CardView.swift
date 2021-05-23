@@ -34,10 +34,21 @@ struct CardView: View {
                 Group{
                     // Card area
                     RoundedRectangle(cornerRadius: geometry.size.height * cornerRadiusFactor)
-                        .foregroundColor(bgFromMatching(card.isMatched))
-                        .animation(nil)
+                        .foregroundColor(Color.white)
                     // Highlight for selected card
                     if card.isSelected {
+                        // Background with matching/mismatching indication
+                        if card.isMatched == .notMatched {
+                            RoundedRectangle(cornerRadius: geometry.size.height * cornerRadiusFactor)
+                                .foregroundColor(Color.init(white: 0.8))
+                                .transition(.identity)
+                        }
+                        if card.isMatched == .matched {
+                            RoundedRectangle(cornerRadius: geometry.size.height * cornerRadiusFactor)
+                                .foregroundColor(Color.yellow)
+                                .transition(.identity)
+                        }
+                        // Additional border for selected card
                         RoundedRectangle(cornerRadius: geometry.size.height * cornerRadiusFactor + 2)
                             .stroke(Color.yellow, lineWidth: 3)
                             .offset(CGSize(width: -3, height: -3))
