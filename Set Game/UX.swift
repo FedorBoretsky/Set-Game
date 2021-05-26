@@ -30,6 +30,12 @@ struct UX {
     // Size
     static let bigRoundButtonSize: CGFloat = 67
     static let circularProgressBarLineWidth: CGFloat = 4
+    
+    // Animation timing
+    struct Time {
+        static let dealingSingleCard = 0.17
+        static let pauseBetweenCards = 0.2 //dealingSingleCard - 0.2
+    }
 
 
 }

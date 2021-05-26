@@ -252,12 +252,20 @@ class SetGameModel: ObservableObject {
     // MARK: - Deal
     
     private func deal(numberOfCards: Int) {
-        openedCards += deck.suffix(numberOfCards)
-        if numberOfCards <= deck.count {
-            deck.removeLast(numberOfCards)
-        } else {
-            deck.removeAll()
+        for _ in 0..<numberOfCards {
+            if let card = deck.popLast() {
+                openedCards.append(card)
+            } else {
+                break
+            }
         }
+//        openedCards += deck.suffix(numberOfCards)
+//        if numberOfCards <= deck.count {
+//            deck.removeLast(numberOfCards)
+//        } else {
+//            deck.removeAll()
+//        }
+        
         updatePropertyIsGameOver()
     }
     

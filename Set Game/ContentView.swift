@@ -39,7 +39,7 @@ struct ContentView: View {
     
     
     @State private var showingRules = false
-    
+        
     var body: some View {
         ZStack {
             
@@ -89,7 +89,7 @@ struct ContentView: View {
                             .padding(.bottom, 15)
                         
                         // Deck
-                        Button (action: { viewModel.deal3Cards() }, label : { DeckView(deckCards: viewModel.deckCards) })
+                        Button (action: deal3cards, label : { DeckView(deckCards: viewModel.deckCards) })
                             .disabled(viewModel.isCheatMode || viewModel.isDeckEmpty)
                         
                         // Cheat
@@ -114,7 +114,7 @@ struct ContentView: View {
                         duoModePlayerZone(playerIndex: 0, label: { BigRoundButtonLabel.ladygug })
                         
                         // Deck
-                        Button (action: { viewModel.deal3Cards() }, label : { DeckView(deckCards: viewModel.deckCards) })
+                        Button (action: deal3cards, label : { DeckView(deckCards: viewModel.deckCards) })
                             .disabled(!viewModel.isThereActivePlayer || viewModel.isDeckEmpty)
                         
                         // 2nd player
@@ -160,6 +160,7 @@ struct ContentView: View {
             .onPreferenceChange(StoredRectPreferenceKey.self) { preferences in
                 for p in preferences {
                     self.storedRects¨[p.id] = p.rect
+//                    print(p.id)
                 }
             }
             .padding()
@@ -204,11 +205,34 @@ struct ContentView: View {
     }
     
     
+    fileprivate func deal3cards() {
+        withAnimation{
+            storePositionOfCardsInDeck()
+            viewModel.deal3Cards()
+        }
+    }
+    
     func startDealingAnimation(for card: SetGameModel.Card) {
         dealingAdjustments¨[card.id] = dealingAdjustmentForCard(card)
-        withAnimation(.easeInOut(duration: 0.3)){
+        withAnimation(Animation.easeInOut(duration: UX.Time.dealingSingleCard).delay(Double(positionInDeckFromTop(card: card)) * UX.Time.pauseBetweenCards)){
             dealingAdjustments¨[card.id] = DealingAdjustment.noDeviation
         }
+    }
+    
+    func positionInDeckFromTop(card: SetGameModel.Card) -> Int {
+        if let lastIndex = storedPositionOfCardsInDeck.lastIndex(of: card) {
+            print (storedPositionOfCardsInDeck.count - lastIndex - 1)
+            return storedPositionOfCardsInDeck.count - lastIndex - 1
+        } else {
+            print("ZZZ")
+            return 0
+        }
+    }
+    
+    @State private var storedPositionOfCardsInDeck: [SetGameModel.Card] = []
+    
+    func storePositionOfCardsInDeck() {
+        self.storedPositionOfCardsInDeck = viewModel.deckCards
     }
     
     func dealingAdjustmentForCard(_ card: SetGameModel.Card) -> DealingAdjustment {
